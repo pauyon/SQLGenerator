@@ -1,0 +1,10 @@
+C:\Users\Paulino\Desktop\SQLGenerator\SQLGenerator\bin\Debug\SQLGenerator.exe.config
+C:\Users\Paulino\Desktop\SQLGenerator\SQLGenerator\bin\Debug\SQLGenerator.exe
+C:\Users\Paulino\Desktop\SQLGenerator\SQLGenerator\bin\Debug\SQLGenerator.pdb
+C:\Users\Paulino\Desktop\SQLGenerator\SQLGenerator\obj\Debug\SQLGenerator.csprojAssemblyReference.cache
+C:\Users\Paulino\Desktop\SQLGenerator\SQLGenerator\obj\Debug\SQLGenerator.SQLGeneratorForm.resources
+C:\Users\Paulino\Desktop\SQLGenerator\SQLGenerator\obj\Debug\SQLGenerator.Properties.Resources.resources
+C:\Users\Paulino\Desktop\SQLGenerator\SQLGenerator\obj\Debug\SQLGenerator.csproj.GenerateResource.cache
+C:\Users\Paulino\Desktop\SQLGenerator\SQLGenerator\obj\Debug\SQLGenerator.csproj.CoreCompileInputs.cache
+C:\Users\Paulino\Desktop\SQLGenerator\SQLGenerator\obj\Debug\SQLGenerator.exe
+C:\Users\Paulino\Desktop\SQLGenerator\SQLGenerator\obj\Debug\SQLGenerator.pdb
