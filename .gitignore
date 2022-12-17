@@ -5,3 +5,8 @@
 /.vs
 /SQLGenerator/SQLGenerator/obj/Debug/SQLGenerator.csproj.AssemblyReference.cache
 /SQLGenerator/SQLGenerator/obj/Release/SQLGenerator.csproj.AssemblyReference.cache
+/SQLGenerator/.vs/SQLGenerator/v17
+/SQLGenerator/.vs/SQLGenerator/FileContentIndex
+/SQLGenerator/SQLGenerator/obj/Debug
+/SQLGenerator/SQLGenerator/bin/Debug/SQLGenerator.pdb
+/SQLGenerator/SQLGenerator/bin/Debug/SQLGenerator.exe
