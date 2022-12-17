@@ -1,51 +1,36 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Media;
 using System.Security;
-using System.Text;
 using System.Text.RegularExpressions;
-using System.Threading.Tasks;
 using System.Windows.Forms;
+using static SQLGenerator.Enums;
 
 namespace SQLGenerator
 {
     public partial class SQLGeneratorForm : Form
     {
-        static private string _sourceFileName;
-        static private string _sourceFilePath;
+        // Import file fields
+        private static string _targetFileName;
+        private static string _targetFilePath;
 
-        static private string _targetFileName;
-        static private string _targetFilePath;
+        // Export file fields
+        private static string _sourceFileName;
+        private static string _sourceFilePath;
 
-        static private string _customFileName;
+        private static List<string> _headers;
 
-        private SoundPlayer _fanfare = new SoundPlayer(SQLGenerator.Properties.Resources.fanfare);
+        private string _customExportFileName;
+        private CrudOperation COMMAND;
 
-        static private string COMMAND;
-        private const string INSERT = "insert";
-        private const string DELETE = "delete";
-
-        static private string DATATYPE;
-        private const string EMPLOYEES = "employees";
-        private const string GLCODES = "glcodes";
-        private const string VENDORS = "vendors";
+        private SoundPlayer _fanfare = new SoundPlayer(Properties.Resources.fanfare);
 
         public SQLGeneratorForm()
         {
             InitializeComponent();
-
-            COMMAND = INSERT;
-            DATATYPE = EMPLOYEES;
-            _sourceFileName = null;
-            _sourceFilePath = null;
-            _targetFileName = null;
-            _targetFilePath = null;
-            _customFileName = null;
+            ClearFields();
         }
 
         private void SourceFileSelectBtn_Click(object sender, EventArgs e)
@@ -69,10 +54,9 @@ namespace SQLGenerator
 
                         _sourceFileName = fileName;
                         _sourceFilePath = filePath.Replace(fileName, "");
-
                     }
 
-                    UpdateFields();
+                    RefreshFormElements();
                 }
                 catch (SecurityException ex)
                 {
@@ -89,64 +73,57 @@ namespace SQLGenerator
             if (selectFolderDialog.ShowDialog() == DialogResult.OK)
             {
                 _targetFilePath = selectFolderDialog.SelectedPath + @"\";
-                _targetFileName = _customFileName ?? _sourceFileName;
+                _targetFileName = _customExportFileName ?? _sourceFileName;
                 _targetFileName = _targetFileName != null ? _targetFileName.Replace(".csv", ".sql") : _targetFileName;
-                UpdateFields();
+                RefreshFormElements();
             }
         }
 
-        private void UpdateFields()
+        private void RefreshFormElements()
         {
             switch (COMMAND)
             {
-                case INSERT:
-                    SourceFileBtn.Enabled = true;
-                    SourceFileTxt.Enabled = true;
-                    
+                case CrudOperation.Insert:
+
+                    EnableSourceFileFormButton(true);
                     SourceFileTxt.Text = _sourceFilePath + _sourceFileName;
 
                     if (SameAsSourceCheckBox.Checked && !string.IsNullOrEmpty(SourceFileTxt.Text))
                     {
-                        TargetFileTxt.Text = _sourceFilePath + (_customFileName ?? _sourceFileName);
+                        TargetFileTxt.Text = _sourceFilePath + (_customExportFileName ?? _sourceFileName);
                         TargetFileTxt.Text = TargetFileTxt.Text.Replace(".csv", ".sql");
                         SameAsSourceCheckBox.Enabled = true;
                     }
                     else
                     {
-                        TargetFileTxt.Text = _targetFilePath + _customFileName ?? _sourceFileName.Replace(".csv", ".sql");
+                        TargetFileTxt.Text = _targetFilePath + _customExportFileName ?? _sourceFileName.Replace(".csv", ".sql");
 
                         if (!string.IsNullOrEmpty(TargetFileTxt.Text))
                         {
-                            TargetFileBtn.Enabled = true;
-                            TargetFileTxt.Enabled = true;
+                            EnableTargetFileFormElements(true);
                             SameAsSourceCheckBox.Enabled = true;
-
                         }
                         else
                         {
-                            TargetFileBtn.Enabled = false;
-                            TargetFileTxt.Enabled = false;
+                            EnableTargetFileFormElements(false);
                             SameAsSourceCheckBox.Enabled = false;
                         }
-                        
+
                     }
 
-                    if (!string.IsNullOrEmpty(SourceFileTxt.Text) && !string.IsNullOrEmpty(TargetFileTxt.Text))
-                        GenerateBtn.Enabled = true;
-                    else
-                        GenerateBtn.Enabled = false;
+                    GenerateBtn.Enabled = !string.IsNullOrEmpty(SourceFileTxt.Text) &&
+                                          !string.IsNullOrEmpty(TargetFileTxt.Text);
                     break;
-                case DELETE:
-                    SourceFileBtn.Enabled = false;
-                    SourceFileTxt.Enabled = false;
 
-                    TargetFileBtn.Enabled = true;
-                    TargetFileTxt.Enabled = true;
+                case CrudOperation.Delete:
+
+                    EnableSourceFileFormButton(false);
+                    EnableTargetFileFormElements(true);
 
                     SameAsSourceCheckBox.Enabled = false;
 
                     SourceFileTxt.Text = null;
-                    TargetFileTxt.Text = _targetFilePath + _customFileName ?? "Export.sql";
+                    TargetFileTxt.Text = _targetFilePath + _customExportFileName ?? "Export.sql";
 
                     if (!string.IsNullOrEmpty(TargetFileTxt.Text))
                         GenerateBtn.Enabled = true;
@@ -172,12 +149,12 @@ namespace SQLGenerator
         {
             switch (COMMAND)
             {
-                case INSERT:
-                    var data = ReadCSVFile();
+                case CrudOperation.Insert:
+                    var data = ReadCSVFileAndReturnData();
                     WriteSQLFile(data);
                     break;
 
-                case DELETE:
+                case CrudOperation.Delete:
                     WriteSQLFile();
                     break;
 
@@ -187,80 +164,50 @@ namespace SQLGenerator
             }
         }
 
-        private List<Dictionary<string, string>> ReadCSVFile()
+        private IEnumerable<string> ReadCSVFileAndReturnData()
         {
-            var data = new List<Dictionary<string, string>>();
+            // Prep CSV reader
             Regex CSVParser = new Regex(",(?=(?:[^\"]*\"[^\"]*\")*(?![^\"]*\"))");
+
+            // Read all CSV lines & store headers
             var lines = File.ReadLines(SourceFileTxt.Text);
-            var headers = lines.FirstOrDefault().Split(',');
+            _headers = lines.FirstOrDefault().Split(',').ToList();
 
-            foreach (string line in lines.Skip(1))
-            {
-                int col = 0;
-                var cells = CSVParser.Split(line);
-                Dictionary<string, string> row = new Dictionary<string, string>();
-                foreach (string cell in cells)
-                {
-                    var cellTrim = Regex.Replace(cell, @",[ \t]+", ", ").Replace("\"", string.Empty).Replace("'", "''").Trim();
-                    row.Add(headers[col], cellTrim);
-                    col++;
-                }
-                data.Add(row);
-            }
-
-            return data;
+            // Return data in csv
+            return lines.Skip(1);
         }
 
-        private void ReadExcelFile()
-        {
-            // need to implement
-        }
-
-        private bool WriteSQLFile(List<Dictionary<string, string>> data = null)
+        private bool WriteSQLFile(IEnumerable<string> data = null)
         {
             if (File.Exists(TargetFileTxt.Text))
                 File.Delete(TargetFileTxt.Text);
 
-            using (System.IO.StreamWriter file = new System.IO.StreamWriter(TargetFileTxt.Text, true))
+            using (StreamWriter file = new StreamWriter(TargetFileTxt.Text, true))
             {
-                file.WriteLine("DECLARE @CompanyId varchar(255)");
-                file.WriteLine("SET @CompanyId = '" + CompanyIDTxt.Text + "'");
-
                 switch (COMMAND)
                 {
-                    case INSERT:
-                        if (DATATYPE == VENDORS)
-                            file.WriteLine("insert into Vendstage([VendName], [companyNo], [VendNo], [Address1], [Address2], [City], [State], [Zip]) values");
+                    case CrudOperation.Insert:
 
-                        if (DATATYPE == GLCODES)
-                            file.WriteLine("insert into GLACCTSTAGE([CompanyNo], [GLAccount], [Description], [Key]) values");
+                        file.WriteLine("BEGIN TRANSACTION");
+                        file.WriteLine($"INSERT INTO {txtTableName.Text}({string.Join(", ", _headers)}) VALUES");
 
                         foreach (var row in data)
                         {
-                            switch (DATATYPE)
-                            {
-                                case VENDORS:
-                                    file.WriteLine("('" + row["VendorName"] + "', @CompanyId, '" + row["VendorID"] + "', '" + row["Address1"] + "', '" + row["Address 2"] + "', '" + row["City"] + "', '" + row["State"] + "', '" + row["Zip Code"] + "'),");
-                                    break;
-                                case GLCODES:
-                                    file.WriteLine("(@CompanyId, '" + row["AccountNumber"] + "', '" + row["AccountDescription"] + "', NEWID()),");
-                                    break;
-                            }
+                            file.WriteLine($"({string.Join(", ", row.Split(',').ToList())}),");
                         }
+
+                        file.WriteLine("ROLLBACK");
+                        file.WriteLine("-- COMMIT TRANSACTION");
+
                         break;
 
-                    case DELETE:
-                        file.WriteLine("delete from GLACCTSTAGE where companyNo = @CompanyId");
+                    case CrudOperation.Delete:
+                        file.WriteLine($"DELETE FROM {txtTableName.Text} where ??? = ???");
                         break;
 
                     default:
                         MessageBox.Show("This command hasn't been programmed yet :(", "ERROR", MessageBoxButtons.OK, MessageBoxIcon.Error);
                         return false;
-                }
-
-                if (UpdateSummitCheckBox.Checked)
-                {
-                    file.WriteLine("Update Companies SET summit_id = @CompanyId Where id = @CompanyId;");
                 }
 
                 file.WriteLine("GO");
@@ -275,8 +222,8 @@ namespace SQLGenerator
         {
             if (ImportRadioBtn.Checked)
             {
-                COMMAND = INSERT;
-                UpdateFields();
+                COMMAND = CrudOperation.Delete;
+                RefreshFormElements();
             }
         }
 
@@ -284,33 +231,36 @@ namespace SQLGenerator
         {
             if (DeleteRadioBtn.Checked)
             {
-                COMMAND = DELETE;
-                UpdateFields();
+                COMMAND = CrudOperation.Delete;
+                RefreshFormElements();
             }
-        }
-
-        private void EmployeeRadioBtn_CheckedChanged(object sender, EventArgs e)
-        {
-            DATATYPE = EMPLOYEES;
-            UpdateFields();
-        }
-
-        private void GLCodesRadioBtn_CheckedChanged(object sender, EventArgs e)
-        {
-            DATATYPE = GLCODES;
-            UpdateFields();
-        }
-
-        private void VendorsRadioBtn_CheckedChanged(object sender, EventArgs e)
-        {
-            DATATYPE = VENDORS;
-            UpdateFields();
         }
 
         private void ExportFileNameTxt_TextChanged(object sender, EventArgs e)
         {
-            _customFileName = !string.IsNullOrEmpty(ExportFileNameTxt.Text) ? ExportFileNameTxt.Text + ".sql" : null;
-            UpdateFields();
+            _customExportFileName = !string.IsNullOrEmpty(ExportFileNameTxt.Text) ? ExportFileNameTxt.Text + ".sql" : null;
+            RefreshFormElements();
+        }
+
+        private void EnableSourceFileFormButton(bool value)
+        {
+            SourceFileBtn.Enabled = value;
+            SourceFileTxt.Enabled = value;
+        }
+
+        private void EnableTargetFileFormElements(bool value)
+        {
+            TargetFileBtn.Enabled = value;
+            TargetFileTxt.Enabled = value;
+        }
+
+        private void ClearFields()
+        {
+            _sourceFileName = null;
+            _sourceFilePath = null;
+            _targetFileName = null;
+            _targetFilePath = null;
+            _customExportFileName = null;
         }
     }
 }
