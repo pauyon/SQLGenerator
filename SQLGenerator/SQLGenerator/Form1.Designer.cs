@@ -29,52 +29,52 @@
         private void InitializeComponent()
         {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(SQLGeneratorForm));
-            this.SoftwareNameLabel = new System.Windows.Forms.Label();
+            this.lblAppTitle = new System.Windows.Forms.Label();
             this.lblExportGroupBox = new System.Windows.Forms.GroupBox();
-            this.GenerateBtn = new System.Windows.Forms.Button();
-            this.SameAsSourceCheckBox = new System.Windows.Forms.CheckBox();
-            this.ExportFileNameLabel = new System.Windows.Forms.Label();
+            this.btnGenerate = new System.Windows.Forms.Button();
+            this.chkBoxSameAsSource = new System.Windows.Forms.CheckBox();
+            this.lblExportFileName = new System.Windows.Forms.Label();
             this.ExportFileNameTxt = new System.Windows.Forms.TextBox();
-            this.TargetFileBtn = new System.Windows.Forms.Button();
-            this.SourceFileBtn = new System.Windows.Forms.Button();
-            this.TargetFileLabel = new System.Windows.Forms.Label();
-            this.TargetFileTxt = new System.Windows.Forms.TextBox();
-            this.SourceFileLabel = new System.Windows.Forms.Label();
-            this.SourceFileTxt = new System.Windows.Forms.TextBox();
+            this.btnTargetFile = new System.Windows.Forms.Button();
+            this.btnSourceFile = new System.Windows.Forms.Button();
+            this.lblTargetFile = new System.Windows.Forms.Label();
+            this.txtTargetFile = new System.Windows.Forms.TextBox();
+            this.lblSourceFile = new System.Windows.Forms.Label();
+            this.txtSourceFile = new System.Windows.Forms.TextBox();
             this.txtTableName = new System.Windows.Forms.TextBox();
             this.lblTableName = new System.Windows.Forms.Label();
             this.lblCrudActionBox = new System.Windows.Forms.GroupBox();
-            this.DeleteRadioBtn = new System.Windows.Forms.RadioButton();
-            this.ImportRadioBtn = new System.Windows.Forms.RadioButton();
-            this.pictureBox1 = new System.Windows.Forms.PictureBox();
+            this.btnDeleteRadio = new System.Windows.Forms.RadioButton();
+            this.btnImportRadio = new System.Windows.Forms.RadioButton();
+            this.imgLogo = new System.Windows.Forms.PictureBox();
             this.lblExportGroupBox.SuspendLayout();
             this.lblCrudActionBox.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.imgLogo)).BeginInit();
             this.SuspendLayout();
             // 
-            // SoftwareNameLabel
+            // lblAppTitle
             // 
-            this.SoftwareNameLabel.AutoSize = true;
-            this.SoftwareNameLabel.BackColor = System.Drawing.SystemColors.Control;
-            this.SoftwareNameLabel.Font = new System.Drawing.Font("Microsoft Sans Serif", 21.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.SoftwareNameLabel.Location = new System.Drawing.Point(218, 9);
-            this.SoftwareNameLabel.Name = "SoftwareNameLabel";
-            this.SoftwareNameLabel.Size = new System.Drawing.Size(216, 33);
-            this.SoftwareNameLabel.TabIndex = 0;
-            this.SoftwareNameLabel.Text = "SQLGenerator";
+            this.lblAppTitle.AutoSize = true;
+            this.lblAppTitle.BackColor = System.Drawing.SystemColors.Control;
+            this.lblAppTitle.Font = new System.Drawing.Font("Microsoft Sans Serif", 21.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblAppTitle.Location = new System.Drawing.Point(218, 9);
+            this.lblAppTitle.Name = "lblAppTitle";
+            this.lblAppTitle.Size = new System.Drawing.Size(216, 33);
+            this.lblAppTitle.TabIndex = 0;
+            this.lblAppTitle.Text = "SQLGenerator";
             // 
             // lblExportGroupBox
             // 
-            this.lblExportGroupBox.Controls.Add(this.GenerateBtn);
-            this.lblExportGroupBox.Controls.Add(this.SameAsSourceCheckBox);
-            this.lblExportGroupBox.Controls.Add(this.ExportFileNameLabel);
+            this.lblExportGroupBox.Controls.Add(this.btnGenerate);
+            this.lblExportGroupBox.Controls.Add(this.chkBoxSameAsSource);
+            this.lblExportGroupBox.Controls.Add(this.lblExportFileName);
             this.lblExportGroupBox.Controls.Add(this.ExportFileNameTxt);
-            this.lblExportGroupBox.Controls.Add(this.TargetFileBtn);
-            this.lblExportGroupBox.Controls.Add(this.SourceFileBtn);
-            this.lblExportGroupBox.Controls.Add(this.TargetFileLabel);
-            this.lblExportGroupBox.Controls.Add(this.TargetFileTxt);
-            this.lblExportGroupBox.Controls.Add(this.SourceFileLabel);
-            this.lblExportGroupBox.Controls.Add(this.SourceFileTxt);
+            this.lblExportGroupBox.Controls.Add(this.btnTargetFile);
+            this.lblExportGroupBox.Controls.Add(this.btnSourceFile);
+            this.lblExportGroupBox.Controls.Add(this.lblTargetFile);
+            this.lblExportGroupBox.Controls.Add(this.txtTargetFile);
+            this.lblExportGroupBox.Controls.Add(this.lblSourceFile);
+            this.lblExportGroupBox.Controls.Add(this.txtSourceFile);
             this.lblExportGroupBox.Location = new System.Drawing.Point(19, 183);
             this.lblExportGroupBox.Name = "lblExportGroupBox";
             this.lblExportGroupBox.Size = new System.Drawing.Size(614, 207);
@@ -82,39 +82,39 @@
             this.lblExportGroupBox.TabStop = false;
             this.lblExportGroupBox.Text = "Export Options";
             // 
-            // GenerateBtn
+            // btnGenerate
             // 
-            this.GenerateBtn.Enabled = false;
-            this.GenerateBtn.Location = new System.Drawing.Point(269, 170);
-            this.GenerateBtn.Name = "GenerateBtn";
-            this.GenerateBtn.Size = new System.Drawing.Size(75, 23);
-            this.GenerateBtn.TabIndex = 13;
-            this.GenerateBtn.Text = "Generate";
-            this.GenerateBtn.UseVisualStyleBackColor = true;
-            this.GenerateBtn.Click += new System.EventHandler(this.GenerateBtn_Click);
+            this.btnGenerate.Enabled = false;
+            this.btnGenerate.Location = new System.Drawing.Point(269, 170);
+            this.btnGenerate.Name = "btnGenerate";
+            this.btnGenerate.Size = new System.Drawing.Size(75, 23);
+            this.btnGenerate.TabIndex = 13;
+            this.btnGenerate.Text = "Generate";
+            this.btnGenerate.UseVisualStyleBackColor = true;
+            this.btnGenerate.Click += new System.EventHandler(this.GenerateBtn_Click);
             // 
-            // SameAsSourceCheckBox
+            // chkBoxSameAsSource
             // 
-            this.SameAsSourceCheckBox.AutoSize = true;
-            this.SameAsSourceCheckBox.Checked = true;
-            this.SameAsSourceCheckBox.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.SameAsSourceCheckBox.Enabled = false;
-            this.SameAsSourceCheckBox.Location = new System.Drawing.Point(74, 108);
-            this.SameAsSourceCheckBox.Name = "SameAsSourceCheckBox";
-            this.SameAsSourceCheckBox.Size = new System.Drawing.Size(105, 17);
-            this.SameAsSourceCheckBox.TabIndex = 19;
-            this.SameAsSourceCheckBox.Text = "Same As Source";
-            this.SameAsSourceCheckBox.UseVisualStyleBackColor = true;
-            this.SameAsSourceCheckBox.Click += new System.EventHandler(this.SameAsSourceCheckBox_CheckedChanged);
+            this.chkBoxSameAsSource.AutoSize = true;
+            this.chkBoxSameAsSource.Checked = true;
+            this.chkBoxSameAsSource.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.chkBoxSameAsSource.Enabled = false;
+            this.chkBoxSameAsSource.Location = new System.Drawing.Point(74, 108);
+            this.chkBoxSameAsSource.Name = "chkBoxSameAsSource";
+            this.chkBoxSameAsSource.Size = new System.Drawing.Size(105, 17);
+            this.chkBoxSameAsSource.TabIndex = 19;
+            this.chkBoxSameAsSource.Text = "Same As Source";
+            this.chkBoxSameAsSource.UseVisualStyleBackColor = true;
+            this.chkBoxSameAsSource.Click += new System.EventHandler(this.SameAsSourceCheckBox_CheckedChanged);
             // 
-            // ExportFileNameLabel
+            // lblExportFileName
             // 
-            this.ExportFileNameLabel.AutoSize = true;
-            this.ExportFileNameLabel.Location = new System.Drawing.Point(334, 103);
-            this.ExportFileNameLabel.Name = "ExportFileNameLabel";
-            this.ExportFileNameLabel.Size = new System.Drawing.Size(52, 13);
-            this.ExportFileNameLabel.TabIndex = 16;
-            this.ExportFileNameLabel.Text = "Filename:";
+            this.lblExportFileName.AutoSize = true;
+            this.lblExportFileName.Location = new System.Drawing.Point(334, 103);
+            this.lblExportFileName.Name = "lblExportFileName";
+            this.lblExportFileName.Size = new System.Drawing.Size(52, 13);
+            this.lblExportFileName.TabIndex = 16;
+            this.lblExportFileName.Text = "Filename:";
             // 
             // ExportFileNameTxt
             // 
@@ -124,61 +124,61 @@
             this.ExportFileNameTxt.TabIndex = 14;
             this.ExportFileNameTxt.TextChanged += new System.EventHandler(this.ExportFileNameTxt_TextChanged);
             // 
-            // TargetFileBtn
+            // btnTargetFile
             // 
-            this.TargetFileBtn.Enabled = false;
-            this.TargetFileBtn.Location = new System.Drawing.Point(532, 123);
-            this.TargetFileBtn.Name = "TargetFileBtn";
-            this.TargetFileBtn.Size = new System.Drawing.Size(75, 23);
-            this.TargetFileBtn.TabIndex = 18;
-            this.TargetFileBtn.Text = "Select";
-            this.TargetFileBtn.UseVisualStyleBackColor = true;
-            this.TargetFileBtn.Click += new System.EventHandler(this.TargetFileBtn_Click);
+            this.btnTargetFile.Enabled = false;
+            this.btnTargetFile.Location = new System.Drawing.Point(532, 123);
+            this.btnTargetFile.Name = "btnTargetFile";
+            this.btnTargetFile.Size = new System.Drawing.Size(75, 23);
+            this.btnTargetFile.TabIndex = 18;
+            this.btnTargetFile.Text = "Select";
+            this.btnTargetFile.UseVisualStyleBackColor = true;
+            this.btnTargetFile.Click += new System.EventHandler(this.TargetFileBtn_Click);
             // 
-            // SourceFileBtn
+            // btnSourceFile
             // 
-            this.SourceFileBtn.Location = new System.Drawing.Point(532, 43);
-            this.SourceFileBtn.Name = "SourceFileBtn";
-            this.SourceFileBtn.Size = new System.Drawing.Size(75, 23);
-            this.SourceFileBtn.TabIndex = 17;
-            this.SourceFileBtn.Text = "Select";
-            this.SourceFileBtn.UseVisualStyleBackColor = true;
-            this.SourceFileBtn.Click += new System.EventHandler(this.SourceFileSelectBtn_Click);
+            this.btnSourceFile.Location = new System.Drawing.Point(532, 43);
+            this.btnSourceFile.Name = "btnSourceFile";
+            this.btnSourceFile.Size = new System.Drawing.Size(75, 23);
+            this.btnSourceFile.TabIndex = 17;
+            this.btnSourceFile.Text = "Select";
+            this.btnSourceFile.UseVisualStyleBackColor = true;
+            this.btnSourceFile.Click += new System.EventHandler(this.SourceFileSelectBtn_Click);
             // 
-            // TargetFileLabel
+            // lblTargetFile
             // 
-            this.TargetFileLabel.AutoSize = true;
-            this.TargetFileLabel.Location = new System.Drawing.Point(7, 108);
-            this.TargetFileLabel.Name = "TargetFileLabel";
-            this.TargetFileLabel.Size = new System.Drawing.Size(60, 13);
-            this.TargetFileLabel.TabIndex = 15;
-            this.TargetFileLabel.Text = "Destination";
+            this.lblTargetFile.AutoSize = true;
+            this.lblTargetFile.Location = new System.Drawing.Point(7, 108);
+            this.lblTargetFile.Name = "lblTargetFile";
+            this.lblTargetFile.Size = new System.Drawing.Size(60, 13);
+            this.lblTargetFile.TabIndex = 15;
+            this.lblTargetFile.Text = "Destination";
             // 
-            // TargetFileTxt
+            // txtTargetFile
             // 
-            this.TargetFileTxt.Enabled = false;
-            this.TargetFileTxt.Location = new System.Drawing.Point(10, 125);
-            this.TargetFileTxt.Name = "TargetFileTxt";
-            this.TargetFileTxt.ReadOnly = true;
-            this.TargetFileTxt.Size = new System.Drawing.Size(516, 20);
-            this.TargetFileTxt.TabIndex = 12;
+            this.txtTargetFile.Enabled = false;
+            this.txtTargetFile.Location = new System.Drawing.Point(10, 125);
+            this.txtTargetFile.Name = "txtTargetFile";
+            this.txtTargetFile.ReadOnly = true;
+            this.txtTargetFile.Size = new System.Drawing.Size(516, 20);
+            this.txtTargetFile.TabIndex = 12;
             // 
-            // SourceFileLabel
+            // lblSourceFile
             // 
-            this.SourceFileLabel.AutoSize = true;
-            this.SourceFileLabel.Location = new System.Drawing.Point(7, 29);
-            this.SourceFileLabel.Name = "SourceFileLabel";
-            this.SourceFileLabel.Size = new System.Drawing.Size(60, 13);
-            this.SourceFileLabel.TabIndex = 11;
-            this.SourceFileLabel.Text = "Source File";
+            this.lblSourceFile.AutoSize = true;
+            this.lblSourceFile.Location = new System.Drawing.Point(7, 29);
+            this.lblSourceFile.Name = "lblSourceFile";
+            this.lblSourceFile.Size = new System.Drawing.Size(60, 13);
+            this.lblSourceFile.TabIndex = 11;
+            this.lblSourceFile.Text = "Source File";
             // 
-            // SourceFileTxt
+            // txtSourceFile
             // 
-            this.SourceFileTxt.Location = new System.Drawing.Point(10, 45);
-            this.SourceFileTxt.Name = "SourceFileTxt";
-            this.SourceFileTxt.ReadOnly = true;
-            this.SourceFileTxt.Size = new System.Drawing.Size(516, 20);
-            this.SourceFileTxt.TabIndex = 10;
+            this.txtSourceFile.Location = new System.Drawing.Point(10, 45);
+            this.txtSourceFile.Name = "txtSourceFile";
+            this.txtSourceFile.ReadOnly = true;
+            this.txtSourceFile.Size = new System.Drawing.Size(516, 20);
+            this.txtSourceFile.TabIndex = 10;
             // 
             // txtTableName
             // 
@@ -198,8 +198,8 @@
             // 
             // lblCrudActionBox
             // 
-            this.lblCrudActionBox.Controls.Add(this.DeleteRadioBtn);
-            this.lblCrudActionBox.Controls.Add(this.ImportRadioBtn);
+            this.lblCrudActionBox.Controls.Add(this.btnDeleteRadio);
+            this.lblCrudActionBox.Controls.Add(this.btnImportRadio);
             this.lblCrudActionBox.Location = new System.Drawing.Point(16, 65);
             this.lblCrudActionBox.Name = "lblCrudActionBox";
             this.lblCrudActionBox.Size = new System.Drawing.Size(109, 100);
@@ -207,49 +207,49 @@
             this.lblCrudActionBox.TabStop = false;
             this.lblCrudActionBox.Text = "CRUD Action";
             // 
-            // DeleteRadioBtn
+            // btnDeleteRadio
             // 
-            this.DeleteRadioBtn.AutoSize = true;
-            this.DeleteRadioBtn.Location = new System.Drawing.Point(7, 43);
-            this.DeleteRadioBtn.Name = "DeleteRadioBtn";
-            this.DeleteRadioBtn.Size = new System.Drawing.Size(56, 17);
-            this.DeleteRadioBtn.TabIndex = 1;
-            this.DeleteRadioBtn.Text = "Delete";
-            this.DeleteRadioBtn.UseVisualStyleBackColor = true;
+            this.btnDeleteRadio.AutoSize = true;
+            this.btnDeleteRadio.Location = new System.Drawing.Point(7, 43);
+            this.btnDeleteRadio.Name = "btnDeleteRadio";
+            this.btnDeleteRadio.Size = new System.Drawing.Size(56, 17);
+            this.btnDeleteRadio.TabIndex = 1;
+            this.btnDeleteRadio.Text = "Delete";
+            this.btnDeleteRadio.UseVisualStyleBackColor = true;
             // 
-            // ImportRadioBtn
+            // btnImportRadio
             // 
-            this.ImportRadioBtn.AutoSize = true;
-            this.ImportRadioBtn.Checked = true;
-            this.ImportRadioBtn.Location = new System.Drawing.Point(7, 20);
-            this.ImportRadioBtn.Name = "ImportRadioBtn";
-            this.ImportRadioBtn.Size = new System.Drawing.Size(56, 17);
-            this.ImportRadioBtn.TabIndex = 0;
-            this.ImportRadioBtn.TabStop = true;
-            this.ImportRadioBtn.Text = "Create";
-            this.ImportRadioBtn.UseVisualStyleBackColor = true;
+            this.btnImportRadio.AutoSize = true;
+            this.btnImportRadio.Checked = true;
+            this.btnImportRadio.Location = new System.Drawing.Point(7, 20);
+            this.btnImportRadio.Name = "btnImportRadio";
+            this.btnImportRadio.Size = new System.Drawing.Size(56, 17);
+            this.btnImportRadio.TabIndex = 0;
+            this.btnImportRadio.TabStop = true;
+            this.btnImportRadio.Text = "Create";
+            this.btnImportRadio.UseVisualStyleBackColor = true;
             // 
-            // pictureBox1
+            // imgLogo
             // 
-            this.pictureBox1.Image = ((System.Drawing.Image)(resources.GetObject("pictureBox1.Image")));
-            this.pictureBox1.InitialImage = ((System.Drawing.Image)(resources.GetObject("pictureBox1.InitialImage")));
-            this.pictureBox1.Location = new System.Drawing.Point(579, 9);
-            this.pictureBox1.Name = "pictureBox1";
-            this.pictureBox1.Size = new System.Drawing.Size(59, 52);
-            this.pictureBox1.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
-            this.pictureBox1.TabIndex = 23;
-            this.pictureBox1.TabStop = false;
+            this.imgLogo.Image = ((System.Drawing.Image)(resources.GetObject("imgLogo.Image")));
+            this.imgLogo.InitialImage = ((System.Drawing.Image)(resources.GetObject("imgLogo.InitialImage")));
+            this.imgLogo.Location = new System.Drawing.Point(579, 9);
+            this.imgLogo.Name = "imgLogo";
+            this.imgLogo.Size = new System.Drawing.Size(59, 52);
+            this.imgLogo.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
+            this.imgLogo.TabIndex = 23;
+            this.imgLogo.TabStop = false;
             // 
             // SQLGeneratorForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(650, 402);
-            this.Controls.Add(this.pictureBox1);
+            this.Controls.Add(this.imgLogo);
             this.Controls.Add(this.txtTableName);
             this.Controls.Add(this.lblExportGroupBox);
             this.Controls.Add(this.lblTableName);
-            this.Controls.Add(this.SoftwareNameLabel);
+            this.Controls.Add(this.lblAppTitle);
             this.Controls.Add(this.lblCrudActionBox);
             this.Name = "SQLGeneratorForm";
             this.Text = "SQLGenerator";
@@ -257,7 +257,7 @@
             this.lblExportGroupBox.PerformLayout();
             this.lblCrudActionBox.ResumeLayout(false);
             this.lblCrudActionBox.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.imgLogo)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -265,24 +265,24 @@
 
         #endregion
 
-        private System.Windows.Forms.Label SoftwareNameLabel;
+        private System.Windows.Forms.Label lblAppTitle;
         private System.Windows.Forms.GroupBox lblExportGroupBox;
-        private System.Windows.Forms.Button GenerateBtn;
-        private System.Windows.Forms.CheckBox SameAsSourceCheckBox;
-        private System.Windows.Forms.Label ExportFileNameLabel;
+        private System.Windows.Forms.Button btnGenerate;
+        private System.Windows.Forms.CheckBox chkBoxSameAsSource;
+        private System.Windows.Forms.Label lblExportFileName;
         private System.Windows.Forms.TextBox ExportFileNameTxt;
-        private System.Windows.Forms.Button TargetFileBtn;
-        private System.Windows.Forms.Button SourceFileBtn;
-        private System.Windows.Forms.Label TargetFileLabel;
-        private System.Windows.Forms.TextBox TargetFileTxt;
-        private System.Windows.Forms.Label SourceFileLabel;
-        private System.Windows.Forms.TextBox SourceFileTxt;
+        private System.Windows.Forms.Button btnTargetFile;
+        private System.Windows.Forms.Button btnSourceFile;
+        private System.Windows.Forms.Label lblTargetFile;
+        private System.Windows.Forms.TextBox txtTargetFile;
+        private System.Windows.Forms.Label lblSourceFile;
+        private System.Windows.Forms.TextBox txtSourceFile;
         private System.Windows.Forms.TextBox txtTableName;
         private System.Windows.Forms.Label lblTableName;
         private System.Windows.Forms.GroupBox lblCrudActionBox;
-        private System.Windows.Forms.RadioButton DeleteRadioBtn;
-        private System.Windows.Forms.RadioButton ImportRadioBtn;
-        private System.Windows.Forms.PictureBox pictureBox1;
+        private System.Windows.Forms.RadioButton btnDeleteRadio;
+        private System.Windows.Forms.RadioButton btnImportRadio;
+        private System.Windows.Forms.PictureBox imgLogo;
     }
 }
 

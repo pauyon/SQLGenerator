@@ -86,33 +86,33 @@ namespace SQLGenerator
                 case CrudOperation.Insert:
 
                     EnableSourceFileFormButton(true);
-                    SourceFileTxt.Text = _sourceFilePath + _sourceFileName;
+                    txtSourceFile.Text = _sourceFilePath + _sourceFileName;
 
-                    if (SameAsSourceCheckBox.Checked && !string.IsNullOrEmpty(SourceFileTxt.Text))
+                    if (chkBoxSameAsSource.Checked && !string.IsNullOrEmpty(txtSourceFile.Text))
                     {
-                        TargetFileTxt.Text = _sourceFilePath + (_customExportFileName ?? _sourceFileName);
-                        TargetFileTxt.Text = TargetFileTxt.Text.Replace(".csv", ".sql");
-                        SameAsSourceCheckBox.Enabled = true;
+                        txtTargetFile.Text = _sourceFilePath + (_customExportFileName ?? _sourceFileName);
+                        txtTargetFile.Text = txtTargetFile.Text.Replace(".csv", ".sql");
+                        chkBoxSameAsSource.Enabled = true;
                     }
                     else
                     {
-                        TargetFileTxt.Text = _targetFilePath + _customExportFileName ?? _sourceFileName.Replace(".csv", ".sql");
+                        txtTargetFile.Text = _targetFilePath + _customExportFileName ?? _sourceFileName.Replace(".csv", ".sql");
 
-                        if (!string.IsNullOrEmpty(TargetFileTxt.Text))
+                        if (!string.IsNullOrEmpty(txtTargetFile.Text))
                         {
                             EnableTargetFileFormElements(true);
-                            SameAsSourceCheckBox.Enabled = true;
+                            chkBoxSameAsSource.Enabled = true;
                         }
                         else
                         {
                             EnableTargetFileFormElements(false);
-                            SameAsSourceCheckBox.Enabled = false;
+                            chkBoxSameAsSource.Enabled = false;
                         }
 
                     }
 
-                    GenerateBtn.Enabled = !string.IsNullOrEmpty(SourceFileTxt.Text) &&
-                                          !string.IsNullOrEmpty(TargetFileTxt.Text);
+                    btnGenerate.Enabled = !string.IsNullOrEmpty(txtSourceFile.Text) &&
+                                          !string.IsNullOrEmpty(txtTargetFile.Text);
                     break;
 
                 case CrudOperation.Delete:
@@ -120,15 +120,15 @@ namespace SQLGenerator
                     EnableSourceFileFormButton(false);
                     EnableTargetFileFormElements(true);
 
-                    SameAsSourceCheckBox.Enabled = false;
+                    chkBoxSameAsSource.Enabled = false;
 
-                    SourceFileTxt.Text = null;
-                    TargetFileTxt.Text = _targetFilePath + _customExportFileName ?? "Export.sql";
+                    txtSourceFile.Text = null;
+                    txtTargetFile.Text = _targetFilePath + _customExportFileName ?? "Export.sql";
 
-                    if (!string.IsNullOrEmpty(TargetFileTxt.Text))
-                        GenerateBtn.Enabled = true;
+                    if (!string.IsNullOrEmpty(txtTargetFile.Text))
+                        btnGenerate.Enabled = true;
                     else
-                        GenerateBtn.Enabled = false;
+                        btnGenerate.Enabled = false;
                     break;
                 default:
                     break;
@@ -137,11 +137,11 @@ namespace SQLGenerator
 
         private void SameAsSourceCheckBox_CheckedChanged(object sender, EventArgs e)
         {
-            if (!string.IsNullOrEmpty(SourceFileTxt.Text))
+            if (!string.IsNullOrEmpty(txtSourceFile.Text))
             {
-                TargetFileTxt.Enabled = !TargetFileTxt.Enabled;
-                TargetFileBtn.Enabled = !TargetFileBtn.Enabled;
-                TargetFileTxt.Text = SourceFileTxt.Text.Replace(".csv", ".sql");
+                txtTargetFile.Enabled = !txtTargetFile.Enabled;
+                btnTargetFile.Enabled = !btnTargetFile.Enabled;
+                txtTargetFile.Text = txtSourceFile.Text.Replace(".csv", ".sql");
             }
         }
 
@@ -170,7 +170,7 @@ namespace SQLGenerator
             Regex CSVParser = new Regex(",(?=(?:[^\"]*\"[^\"]*\")*(?![^\"]*\"))");
 
             // Read all CSV lines & store headers
-            var lines = File.ReadLines(SourceFileTxt.Text);
+            var lines = File.ReadLines(txtSourceFile.Text);
             _headers = lines.FirstOrDefault().Split(',').ToList();
 
             // Return data in csv
@@ -179,10 +179,10 @@ namespace SQLGenerator
 
         private bool WriteSQLFile(IEnumerable<string> data = null)
         {
-            if (File.Exists(TargetFileTxt.Text))
-                File.Delete(TargetFileTxt.Text);
+            if (File.Exists(txtTargetFile.Text))
+                File.Delete(txtTargetFile.Text);
 
-            using (StreamWriter file = new StreamWriter(TargetFileTxt.Text, true))
+            using (StreamWriter file = new StreamWriter(txtTargetFile.Text, true))
             {
                 switch (COMMAND)
                 {
@@ -220,7 +220,7 @@ namespace SQLGenerator
 
         private void ImportRadioBtn_CheckedChanged(object sender, EventArgs e)
         {
-            if (ImportRadioBtn.Checked)
+            if (btnImportRadio.Checked)
             {
                 COMMAND = CrudOperation.Delete;
                 RefreshFormElements();
@@ -229,7 +229,7 @@ namespace SQLGenerator
 
         private void DeleteRadioBtn_CheckedChanged(object sender, EventArgs e)
         {
-            if (DeleteRadioBtn.Checked)
+            if (btnDeleteRadio.Checked)
             {
                 COMMAND = CrudOperation.Delete;
                 RefreshFormElements();
@@ -244,14 +244,14 @@ namespace SQLGenerator
 
         private void EnableSourceFileFormButton(bool value)
         {
-            SourceFileBtn.Enabled = value;
-            SourceFileTxt.Enabled = value;
+            btnSourceFile.Enabled = value;
+            txtSourceFile.Enabled = value;
         }
 
         private void EnableTargetFileFormElements(bool value)
         {
-            TargetFileBtn.Enabled = value;
-            TargetFileTxt.Enabled = value;
+            btnTargetFile.Enabled = value;
+            txtTargetFile.Enabled = value;
         }
 
         private void ClearFields()
