@@ -37,7 +37,7 @@ namespace SQLGenerator
         {
             OpenFileDialog selectFileDialog = new OpenFileDialog
             {
-                InitialDirectory = @"C:\",
+                InitialDirectory = @"C:\Desktop",
                 Filter = "CSV Files (*.csv)|*.csv",
                 CheckFileExists = true,
                 CheckPathExists = true
