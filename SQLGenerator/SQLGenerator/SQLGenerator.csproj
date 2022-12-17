@@ -89,5 +89,8 @@
   <ItemGroup>
     <None Include="sounds\fanfare.wav" />
   </ItemGroup>
+  <ItemGroup>
+    <Content Include="images\sql_logo.png" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
