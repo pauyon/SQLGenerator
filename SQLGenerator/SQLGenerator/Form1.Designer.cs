@@ -34,7 +34,7 @@
             this.btnGenerate = new System.Windows.Forms.Button();
             this.chkBoxSameAsSource = new System.Windows.Forms.CheckBox();
             this.lblExportFileName = new System.Windows.Forms.Label();
-            this.ExportFileNameTxt = new System.Windows.Forms.TextBox();
+            this.txtExportFileName = new System.Windows.Forms.TextBox();
             this.btnTargetFile = new System.Windows.Forms.Button();
             this.btnSourceFile = new System.Windows.Forms.Button();
             this.lblTargetFile = new System.Windows.Forms.Label();
@@ -68,7 +68,7 @@
             this.lblExportGroupBox.Controls.Add(this.btnGenerate);
             this.lblExportGroupBox.Controls.Add(this.chkBoxSameAsSource);
             this.lblExportGroupBox.Controls.Add(this.lblExportFileName);
-            this.lblExportGroupBox.Controls.Add(this.ExportFileNameTxt);
+            this.lblExportGroupBox.Controls.Add(this.txtExportFileName);
             this.lblExportGroupBox.Controls.Add(this.btnTargetFile);
             this.lblExportGroupBox.Controls.Add(this.btnSourceFile);
             this.lblExportGroupBox.Controls.Add(this.lblTargetFile);
@@ -91,7 +91,7 @@
             this.btnGenerate.TabIndex = 13;
             this.btnGenerate.Text = "Generate";
             this.btnGenerate.UseVisualStyleBackColor = true;
-            this.btnGenerate.Click += new System.EventHandler(this.GenerateBtn_Click);
+            this.btnGenerate.Click += new System.EventHandler(this.btnGenerate_Click);
             // 
             // chkBoxSameAsSource
             // 
@@ -105,7 +105,7 @@
             this.chkBoxSameAsSource.TabIndex = 19;
             this.chkBoxSameAsSource.Text = "Same As Source";
             this.chkBoxSameAsSource.UseVisualStyleBackColor = true;
-            this.chkBoxSameAsSource.Click += new System.EventHandler(this.SameAsSourceCheckBox_CheckedChanged);
+            this.chkBoxSameAsSource.Click += new System.EventHandler(this.chkBoxSameAsSource_CheckedChanged);
             // 
             // lblExportFileName
             // 
@@ -118,11 +118,11 @@
             // 
             // ExportFileNameTxt
             // 
-            this.ExportFileNameTxt.Location = new System.Drawing.Point(392, 99);
-            this.ExportFileNameTxt.Name = "ExportFileNameTxt";
-            this.ExportFileNameTxt.Size = new System.Drawing.Size(134, 20);
-            this.ExportFileNameTxt.TabIndex = 14;
-            this.ExportFileNameTxt.TextChanged += new System.EventHandler(this.ExportFileNameTxt_TextChanged);
+            this.txtExportFileName.Location = new System.Drawing.Point(392, 99);
+            this.txtExportFileName.Name = "ExportFileNameTxt";
+            this.txtExportFileName.Size = new System.Drawing.Size(134, 20);
+            this.txtExportFileName.TabIndex = 14;
+            this.txtExportFileName.TextChanged += new System.EventHandler(this.txtExportFileName_TextChanged);
             // 
             // btnTargetFile
             // 
@@ -133,7 +133,7 @@
             this.btnTargetFile.TabIndex = 18;
             this.btnTargetFile.Text = "Select";
             this.btnTargetFile.UseVisualStyleBackColor = true;
-            this.btnTargetFile.Click += new System.EventHandler(this.TargetFileBtn_Click);
+            this.btnTargetFile.Click += new System.EventHandler(this.btnTargetFile_Click);
             // 
             // btnSourceFile
             // 
@@ -143,7 +143,7 @@
             this.btnSourceFile.TabIndex = 17;
             this.btnSourceFile.Text = "Select";
             this.btnSourceFile.UseVisualStyleBackColor = true;
-            this.btnSourceFile.Click += new System.EventHandler(this.SourceFileSelectBtn_Click);
+            this.btnSourceFile.Click += new System.EventHandler(this.btnSourceFileSelect_Click);
             // 
             // lblTargetFile
             // 
@@ -270,7 +270,7 @@
         private System.Windows.Forms.Button btnGenerate;
         private System.Windows.Forms.CheckBox chkBoxSameAsSource;
         private System.Windows.Forms.Label lblExportFileName;
-        private System.Windows.Forms.TextBox ExportFileNameTxt;
+        private System.Windows.Forms.TextBox txtExportFileName;
         private System.Windows.Forms.Button btnTargetFile;
         private System.Windows.Forms.Button btnSourceFile;
         private System.Windows.Forms.Label lblTargetFile;

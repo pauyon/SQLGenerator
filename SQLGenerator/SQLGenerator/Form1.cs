@@ -33,7 +33,7 @@ namespace SQLGenerator
             ClearFields();
         }
 
-        private void SourceFileSelectBtn_Click(object sender, EventArgs e)
+        private void btnSourceFileSelect_Click(object sender, EventArgs e)
         {
             OpenFileDialog selectFileDialog = new OpenFileDialog
             {
@@ -66,7 +66,7 @@ namespace SQLGenerator
             }
         }
 
-        private void TargetFileBtn_Click(object sender, EventArgs e)
+        private void btnTargetFile_Click(object sender, EventArgs e)
         {
             FolderBrowserDialog selectFolderDialog = new FolderBrowserDialog();
 
@@ -125,17 +125,15 @@ namespace SQLGenerator
                     txtSourceFile.Text = null;
                     txtTargetFile.Text = _targetFilePath + _customExportFileName ?? "Export.sql";
 
-                    if (!string.IsNullOrEmpty(txtTargetFile.Text))
-                        btnGenerate.Enabled = true;
-                    else
-                        btnGenerate.Enabled = false;
+                    btnGenerate.Enabled = !string.IsNullOrEmpty(txtTargetFile.Text);
+
                     break;
                 default:
                     break;
             }
         }
 
-        private void SameAsSourceCheckBox_CheckedChanged(object sender, EventArgs e)
+        private void chkBoxSameAsSource_CheckedChanged(object sender, EventArgs e)
         {
             if (!string.IsNullOrEmpty(txtSourceFile.Text))
             {
@@ -145,7 +143,7 @@ namespace SQLGenerator
             }
         }
 
-        private void GenerateBtn_Click(object sender, EventArgs e)
+        private void btnGenerate_Click(object sender, EventArgs e)
         {
             switch (COMMAND)
             {
@@ -173,7 +171,7 @@ namespace SQLGenerator
             var lines = File.ReadLines(txtSourceFile.Text);
             _headers = lines.FirstOrDefault().Split(',').ToList();
 
-            // Return data in csv
+            // Return only data in CSV
             return lines.Skip(1);
         }
 
@@ -198,6 +196,7 @@ namespace SQLGenerator
 
                         file.WriteLine("ROLLBACK");
                         file.WriteLine("-- COMMIT TRANSACTION");
+                        file.WriteLine("-- Uncomment line above when ready to execute command indefinitely.");
 
                         break;
 
@@ -218,7 +217,7 @@ namespace SQLGenerator
             return true;
         }
 
-        private void ImportRadioBtn_CheckedChanged(object sender, EventArgs e)
+        private void btnImportRadio_CheckedChanged(object sender, EventArgs e)
         {
             if (btnImportRadio.Checked)
             {
@@ -227,7 +226,7 @@ namespace SQLGenerator
             }
         }
 
-        private void DeleteRadioBtn_CheckedChanged(object sender, EventArgs e)
+        private void btnDeleteRadio_CheckedChanged(object sender, EventArgs e)
         {
             if (btnDeleteRadio.Checked)
             {
@@ -236,9 +235,9 @@ namespace SQLGenerator
             }
         }
 
-        private void ExportFileNameTxt_TextChanged(object sender, EventArgs e)
+        private void txtExportFileName_TextChanged(object sender, EventArgs e)
         {
-            _customExportFileName = !string.IsNullOrEmpty(ExportFileNameTxt.Text) ? ExportFileNameTxt.Text + ".sql" : null;
+            _customExportFileName = !string.IsNullOrEmpty(txtExportFileName.Text) ? txtExportFileName.Text + ".sql" : _sourceFileName;
             RefreshFormElements();
         }
 
