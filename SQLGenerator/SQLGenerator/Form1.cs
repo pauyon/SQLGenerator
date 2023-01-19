@@ -14,10 +14,12 @@ namespace SQLGenerator
     {
         // Import file fields
         private static string _targetFileName;
+
         private static string _targetFilePath;
 
         // Export file fields
         private static string _sourceFileName;
+
         private static string _sourceFilePath;
 
         private static List<string> _headers;
@@ -108,7 +110,6 @@ namespace SQLGenerator
                             EnableTargetFileFormElements(false);
                             chkBoxSameAsSource.Enabled = false;
                         }
-
                     }
 
                     btnGenerate.Enabled = !string.IsNullOrEmpty(txtSourceFile.Text) &&
@@ -128,6 +129,7 @@ namespace SQLGenerator
                     btnGenerate.Enabled = !string.IsNullOrEmpty(txtTargetFile.Text);
 
                     break;
+
                 default:
                     break;
             }
