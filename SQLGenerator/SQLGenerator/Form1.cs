@@ -4,7 +4,6 @@ using System.IO;
 using System.Linq;
 using System.Media;
 using System.Security;
-using System.Text.RegularExpressions;
 using System.Windows.Forms;
 using static SQLGenerator.Enums;
 
@@ -13,16 +12,14 @@ namespace SQLGenerator
     public partial class SQLGeneratorForm : Form
     {
         // Import file fields
-        private static string _targetFileName;
-
-        private static string _targetFilePath;
+        private string _targetFileName;
+        private string _targetFilePath;
 
         // Export file fields
-        private static string _sourceFileName;
+        private string _sourceFileName;
+        private string _sourceFilePath;
 
-        private static string _sourceFilePath;
-
-        private static List<string> _headers;
+        private List<string> _headers;
 
         private string _customExportFileName;
         private CrudOperation COMMAND;
@@ -166,18 +163,15 @@ namespace SQLGenerator
 
         private IEnumerable<string> ReadCSVFileAndReturnData()
         {
-            // Prep CSV reader
-            Regex CSVParser = new Regex(",(?=(?:[^\"]*\"[^\"]*\")*(?![^\"]*\"))");
-
             // Read all CSV lines & store headers
             var lines = File.ReadLines(txtSourceFile.Text);
-            _headers = lines.FirstOrDefault().Split(',').ToList();
+            _headers = lines.First().Split(',').ToList();
 
             // Return only data in CSV
             return lines.Skip(1);
         }
 
-        private bool WriteSQLFile(IEnumerable<string> data = null)
+        private void WriteSQLFile(IEnumerable<string> data = null)
         {
             if (File.Exists(txtTargetFile.Text))
                 File.Delete(txtTargetFile.Text);
@@ -208,7 +202,7 @@ namespace SQLGenerator
 
                     default:
                         MessageBox.Show("This command hasn't been programmed yet :(", "ERROR", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                        return false;
+                        break;
                 }
 
                 file.WriteLine("GO");
@@ -216,7 +210,6 @@ namespace SQLGenerator
 
             _fanfare.Play();
             MessageBox.Show("Export Successful!", "Export", MessageBoxButtons.OK, MessageBoxIcon.Information);
-            return true;
         }
 
         private void btnImportRadio_CheckedChanged(object sender, EventArgs e)
