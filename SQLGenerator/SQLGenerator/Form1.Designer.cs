@@ -105,7 +105,7 @@
             this.chkBoxSameAsSource.TabIndex = 19;
             this.chkBoxSameAsSource.Text = "Same As Source";
             this.chkBoxSameAsSource.UseVisualStyleBackColor = true;
-            this.chkBoxSameAsSource.Click += new System.EventHandler(this.chkBoxSameAsSource_CheckedChanged);
+            this.chkBoxSameAsSource.CheckedChanged += new System.EventHandler(this.chkBoxSameAsSource_CheckedChanged);
             // 
             // lblExportFileName
             // 
@@ -116,10 +116,11 @@
             this.lblExportFileName.TabIndex = 16;
             this.lblExportFileName.Text = "Filename:";
             // 
-            // ExportFileNameTxt
+            // txtExportFileName
             // 
+            this.txtExportFileName.Enabled = false;
             this.txtExportFileName.Location = new System.Drawing.Point(392, 99);
-            this.txtExportFileName.Name = "ExportFileNameTxt";
+            this.txtExportFileName.Name = "txtExportFileName";
             this.txtExportFileName.Size = new System.Drawing.Size(134, 20);
             this.txtExportFileName.TabIndex = 14;
             this.txtExportFileName.TextChanged += new System.EventHandler(this.txtExportFileName_TextChanged);

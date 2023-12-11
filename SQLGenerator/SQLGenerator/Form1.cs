@@ -5,26 +5,32 @@ using System.Linq;
 using System.Media;
 using System.Security;
 using System.Windows.Forms;
-using static SQLGenerator.Enums;
+using static SQLGeneratorLibrary.Enums;
 
 namespace SQLGenerator
 {
     public partial class SQLGeneratorForm : Form
     {
-        // Import file fields
-        private string _targetFileName;
-        private string _targetFilePath;
+        // Keep track of export filename 
+        private string _customExportFileName = string.Empty;
+        private string _originalExportFileName = string.Empty;
 
-        // Export file fields
-        private string _sourceFileName;
-        private string _sourceFilePath;
+        // Holds information on target and source files 
+        private FileInfo _targetFile;
+        private FileInfo _sourceFile;
 
+        // Additional information
         private List<string> _headers;
-
-        private string _customExportFileName;
         private CrudOperation COMMAND;
-
         private SoundPlayer _fanfare = new SoundPlayer(Properties.Resources.fanfare);
+
+        public string ExportFileName
+        {
+            get
+            {
+                return _customExportFileName ?? _originalExportFileName;
+            }
+        }
 
         public SQLGeneratorForm()
         {
@@ -48,11 +54,11 @@ namespace SQLGenerator
                 {
                     if (selectFileDialog.CheckFileExists)
                     {
-                        var filePath = selectFileDialog.FileName;
-                        var fileName = selectFileDialog.SafeFileName;
+                        _sourceFile = new FileInfo(selectFileDialog.FileName);
+                        _originalExportFileName = _sourceFile.Name;
 
-                        _sourceFileName = fileName;
-                        _sourceFilePath = filePath.Replace(fileName, "");
+                        _targetFile = GenerateTargetFile(_sourceFile.Directory.FullName);
+                        txtTargetFile.Text = _targetFile.FullName;
                     }
 
                     RefreshFormElements();
@@ -71,32 +77,32 @@ namespace SQLGenerator
 
             if (selectFolderDialog.ShowDialog() == DialogResult.OK)
             {
-                _targetFilePath = selectFolderDialog.SelectedPath + @"\";
-                _targetFileName = _customExportFileName ?? _sourceFileName;
-                _targetFileName = _targetFileName != null ? _targetFileName.Replace(".csv", ".sql") : _targetFileName;
+                _targetFile = GenerateTargetFile(selectFolderDialog.SelectedPath);
+                txtTargetFile.Text = _targetFile.FullName;
+
                 RefreshFormElements();
             }
         }
 
         private void RefreshFormElements()
         {
+            txtSourceFile.Text = _sourceFile.FullName;
+            txtTargetFile.Text = _targetFile.FullName;
+
+            txtExportFileName.Enabled = !string.IsNullOrEmpty(txtTargetFile.Text);
+
             switch (COMMAND)
             {
                 case CrudOperation.Insert:
 
                     EnableSourceFileFormButton(true);
-                    txtSourceFile.Text = _sourceFilePath + _sourceFileName;
 
                     if (chkBoxSameAsSource.Checked && !string.IsNullOrEmpty(txtSourceFile.Text))
                     {
-                        txtTargetFile.Text = _sourceFilePath + (_customExportFileName ?? _sourceFileName);
-                        txtTargetFile.Text = txtTargetFile.Text.Replace(".csv", ".sql");
                         chkBoxSameAsSource.Enabled = true;
                     }
                     else
                     {
-                        txtTargetFile.Text = _targetFilePath + _customExportFileName ?? _sourceFileName.Replace(".csv", ".sql");
-
                         if (!string.IsNullOrEmpty(txtTargetFile.Text))
                         {
                             EnableTargetFileFormElements(true);
@@ -119,10 +125,7 @@ namespace SQLGenerator
                     EnableTargetFileFormElements(true);
 
                     chkBoxSameAsSource.Enabled = false;
-
                     txtSourceFile.Text = null;
-                    txtTargetFile.Text = _targetFilePath + _customExportFileName ?? "Export.sql";
-
                     btnGenerate.Enabled = !string.IsNullOrEmpty(txtTargetFile.Text);
 
                     break;
@@ -138,7 +141,9 @@ namespace SQLGenerator
             {
                 txtTargetFile.Enabled = !txtTargetFile.Enabled;
                 btnTargetFile.Enabled = !btnTargetFile.Enabled;
-                txtTargetFile.Text = txtSourceFile.Text.Replace(".csv", ".sql");
+
+                _targetFile = GenerateTargetFile(_sourceFile.Directory.FullName);
+                txtTargetFile.Text = _targetFile.FullName;
             }
         }
 
@@ -232,7 +237,8 @@ namespace SQLGenerator
 
         private void txtExportFileName_TextChanged(object sender, EventArgs e)
         {
-            _customExportFileName = !string.IsNullOrEmpty(txtExportFileName.Text) ? txtExportFileName.Text + ".sql" : _sourceFileName;
+            _customExportFileName = !string.IsNullOrEmpty(txtExportFileName.Text) ? txtExportFileName.Text + ".sql" : _originalExportFileName;
+            _targetFile = GenerateTargetFile(_targetFile.Directory.FullName);
             RefreshFormElements();
         }
 
@@ -250,11 +256,14 @@ namespace SQLGenerator
 
         private void ClearFields()
         {
-            _sourceFileName = null;
-            _sourceFilePath = null;
-            _targetFileName = null;
-            _targetFilePath = null;
+            _targetFile = new FileInfo(".");
+            _sourceFile = new FileInfo(".");
             _customExportFileName = null;
+        }
+
+        private FileInfo GenerateTargetFile(string basePath)
+        {
+            return new FileInfo(Path.Combine(basePath, ExportFileName.Replace(".csv", ".sql")));
         }
     }
 }

@@ -50,7 +50,6 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Enums.cs" />
     <Compile Include="Form1.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -92,6 +91,12 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="images\sql_logo.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\SqlGeneratorLibrary\SqlGeneratorLibrary.csproj">
+      <Project>{ee6ce3fb-4b85-4194-b42d-9b9a2e88637b}</Project>
+      <Name>SqlGeneratorLibrary</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

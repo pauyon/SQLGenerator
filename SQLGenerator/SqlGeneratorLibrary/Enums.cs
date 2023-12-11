@@ -1,4 +1,4 @@
-﻿namespace SQLGenerator
+﻿namespace SQLGeneratorLibrary
 {
     public static class Enums
     {
