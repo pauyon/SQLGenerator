@@ -1,0 +1,6 @@
+C:\Users\pauli\OneDrive\Documents\GitHub\SQLGenerator\SQLGenerator\SqlGeneratorLibrary\bin\Debug\SqlGeneratorLibrary.dll
+C:\Users\pauli\OneDrive\Documents\GitHub\SQLGenerator\SQLGenerator\SqlGeneratorLibrary\bin\Debug\SqlGeneratorLibrary.pdb
+C:\Users\pauli\OneDrive\Documents\GitHub\SQLGenerator\SQLGenerator\SqlGeneratorLibrary\obj\Debug\SqlGeneratorLibrary.csproj.AssemblyReference.cache
+C:\Users\pauli\OneDrive\Documents\GitHub\SQLGenerator\SQLGenerator\SqlGeneratorLibrary\obj\Debug\SqlGeneratorLibrary.csproj.CoreCompileInputs.cache
+C:\Users\pauli\OneDrive\Documents\GitHub\SQLGenerator\SQLGenerator\SqlGeneratorLibrary\obj\Debug\SqlGeneratorLibrary.dll
+C:\Users\pauli\OneDrive\Documents\GitHub\SQLGenerator\SQLGenerator\SqlGeneratorLibrary\obj\Debug\SqlGeneratorLibrary.pdb
