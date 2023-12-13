@@ -69,12 +69,16 @@ namespace SQLGenerator
         {
             EnableSourceFileFormElements();
             EnableTargetFileFormElements(!chkBoxSameAsSource.Checked);
+            
             chkBoxSameAsSource.Enabled = _sqlGenerator.SourceFile != null;
 
             if (_sqlGenerator.SourceFile == null || _sqlGenerator.TargetFile == null)
             {
                 _sqlGenerator.SetCustomExportFileName(string.Empty);
             }
+
+            btnGenerate.Enabled = _sqlGenerator.SourceFile != null && 
+                                  _sqlGenerator.TargetPath != null;
         }
 
         private void SetToDeleteMode()
@@ -83,9 +87,9 @@ namespace SQLGenerator
             EnableTargetFileFormElements();
 
             chkBoxSameAsSource.Enabled = false;
-
-            btnGenerate.Enabled = _sqlGenerator.TargetFile != null;
             txtExportFileName.Enabled = _sqlGenerator.TargetFile != null;
+            
+            btnGenerate.Enabled = _sqlGenerator.TargetFile != null;
         }
 
         private void chkBoxSameAsSource_CheckedChanged(object sender, EventArgs e)
