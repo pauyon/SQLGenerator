@@ -124,7 +124,7 @@ namespace SQLGenerator
             if (_sqlGenerator.WriteSqlFile(_operation, txtTableName.Text))
             {
                 _fanfare.Play();
-                MessageBox.Show("Export Successful!", "Export Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                MessageBox.Show($"Export Successful!{Environment.NewLine}Location:{Environment.NewLine}{_sqlGenerator.TargetFile.FullName}", "Export Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
             }
             else
             {

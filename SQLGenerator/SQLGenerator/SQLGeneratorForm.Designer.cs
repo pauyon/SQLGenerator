@@ -223,7 +223,7 @@
             this.lblCrudActionBox.Size = new System.Drawing.Size(145, 123);
             this.lblCrudActionBox.TabIndex = 20;
             this.lblCrudActionBox.TabStop = false;
-            this.lblCrudActionBox.Text = "CRUD Action";
+            this.lblCrudActionBox.Text = "Action";
             // 
             // btnDeleteRadio
             // 
