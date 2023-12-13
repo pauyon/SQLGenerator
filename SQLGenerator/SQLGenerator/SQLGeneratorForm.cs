@@ -1,7 +1,6 @@
 ﻿using SqlGeneratorLibrary;
 using System;
 using System.Media;
-using System.Security;
 using System.Windows.Forms;
 using static SQLGeneratorLibrary.Enums;
 
@@ -21,26 +20,20 @@ namespace SQLGenerator
         private void btnSourceFileSelect_Click(object sender, EventArgs e)
         {
             var selectFileDialog = Constants.Dialog.SelectFileDialog;
+            var dialogResult = selectFileDialog.ShowDialog();
 
-            if (selectFileDialog.ShowDialog() == DialogResult.OK)
+            if (dialogResult == DialogResult.OK && selectFileDialog.CheckFileExists)
             {
-                try
-                {
-                    if (selectFileDialog.CheckFileExists)
-                    {
-                        _sqlGenerator.SetSourceFile(selectFileDialog.FileName);
-                        _sqlGenerator.SetTargetFile(_sqlGenerator.SourceFile.Directory.FullName);
+                _sqlGenerator.SetSourceFile(selectFileDialog.FileName);
+                _sqlGenerator.SetTargetFile(_sqlGenerator.SourceFile.Directory.FullName);
 
-                        txtTargetFile.Text = _sqlGenerator.TargetFile.FullName;
-                    }
-
-                    RefreshFormElements();
-                }
-                catch (SecurityException ex)
-                {
-                    MessageBox.Show($"Security error.\n\nError message: {ex.Message}\n\n" +
-                    $"Details:\n\n{ex.StackTrace}");
-                }
+                txtTargetFile.Text = _sqlGenerator.TargetFile.FullName;
+                
+                RefreshFormElements();
+            }
+            else if (dialogResult != DialogResult.Cancel)
+            {
+                MessageBox.Show("There was an issue selecting file", "ERROR", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 
@@ -67,45 +60,49 @@ namespace SQLGenerator
             switch (_operation)
             {
                 case CrudOperation.Insert:
-
-                    EnableSourceFileFormButton(true);
-
-                    if (chkBoxSameAsSource.Checked && !string.IsNullOrEmpty(txtSourceFile.Text))
-                    {
-                        chkBoxSameAsSource.Enabled = true;
-                    }
-                    else
-                    {
-                        if (!string.IsNullOrEmpty(txtTargetFile.Text))
-                        {
-                            EnableTargetFileFormElements(true);
-                            chkBoxSameAsSource.Enabled = true;
-                        }
-                        else
-                        {
-                            EnableTargetFileFormElements(false);
-                            chkBoxSameAsSource.Enabled = false;
-                        }
-                    }
-
-                    btnGenerate.Enabled = !string.IsNullOrEmpty(txtSourceFile.Text) &&
-                                          !string.IsNullOrEmpty(txtTargetFile.Text);
+                    SetFormToInsertState();
                     break;
 
                 case CrudOperation.Delete:
-
-                    EnableSourceFileFormButton(false);
-                    EnableTargetFileFormElements(true);
-
-                    chkBoxSameAsSource.Enabled = false;
-                    txtSourceFile.Text = null;
-                    btnGenerate.Enabled = !string.IsNullOrEmpty(txtTargetFile.Text);
-
+                    SetFormToDeleteState();
                     break;
 
                 default:
                     break;
             }
+        }
+
+        private void SetFormToInsertState()
+        {
+            EnableSourceFileFormElements(true);
+            SetExportSameAsSourceState();
+
+            btnGenerate.Enabled = !string.IsNullOrEmpty(txtSourceFile.Text) && !string.IsNullOrEmpty(txtTargetFile.Text);
+        }
+
+        private void SetExportSameAsSourceState()
+        {
+            if (chkBoxSameAsSource.Checked && !string.IsNullOrEmpty(txtSourceFile.Text))
+            {
+                chkBoxSameAsSource.Enabled = true;
+            }
+            else
+            {
+                var targetFileIsNotEmpty = !string.IsNullOrEmpty(txtTargetFile.Text);
+
+                EnableTargetFileFormElements(targetFileIsNotEmpty);
+                chkBoxSameAsSource.Enabled = targetFileIsNotEmpty;
+            }
+        }
+
+        private void SetFormToDeleteState()
+        {
+            EnableSourceFileFormElements(false);
+            EnableTargetFileFormElements(true);
+
+            chkBoxSameAsSource.Enabled = false;
+            txtSourceFile.Text = null;
+            btnGenerate.Enabled = !string.IsNullOrEmpty(txtTargetFile.Text);
         }
 
         private void chkBoxSameAsSource_CheckedChanged(object sender, EventArgs e)
@@ -127,11 +124,11 @@ namespace SQLGenerator
             if (_sqlGenerator.WriteSqlFile(_operation, txtTableName.Text))
             {
                 _fanfare.Play();
-                MessageBox.Show("Export Successful!", "Export", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                MessageBox.Show("Export Successful!", "Export Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
             }
             else
             {
-                MessageBox.Show("This command hasn't been programmed yet :(", "ERROR", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show("There was an error exporting file", "Export Failed", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 
@@ -156,11 +153,10 @@ namespace SQLGenerator
         private void txtExportFileName_TextChanged(object sender, EventArgs e)
         {
             _sqlGenerator.SetCustomExportFileName(txtExportFileName.Text);
-            _sqlGenerator.SetTargetFile(_sqlGenerator.TargetFile.Directory.FullName);
             RefreshFormElements();
         }
 
-        private void EnableSourceFileFormButton(bool value)
+        private void EnableSourceFileFormElements(bool value)
         {
             btnSourceFile.Enabled = value;
             txtSourceFile.Enabled = value;

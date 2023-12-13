@@ -36,7 +36,9 @@ namespace SqlGeneratorLibrary
         public bool WriteSqlFile(CrudOperation operation, string tableName = "[MyTable]")
         {
             if (File.Exists(TargetFile.FullName))
+            {
                 File.Delete(TargetFile.FullName);
+            }
 
             using (StreamWriter file = new StreamWriter(TargetFile.FullName, true))
             {
