@@ -47,6 +47,7 @@
             this.btnDeleteRadio = new System.Windows.Forms.RadioButton();
             this.btnInsertRadio = new System.Windows.Forms.RadioButton();
             this.imgLogo = new System.Windows.Forms.PictureBox();
+            this.btnUpdateRadio = new System.Windows.Forms.RadioButton();
             this.lblExportGroupBox.SuspendLayout();
             this.lblCrudActionBox.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.imgLogo)).BeginInit();
@@ -199,6 +200,7 @@
             // 
             // lblCrudActionBox
             // 
+            this.lblCrudActionBox.Controls.Add(this.btnUpdateRadio);
             this.lblCrudActionBox.Controls.Add(this.btnDeleteRadio);
             this.lblCrudActionBox.Controls.Add(this.btnInsertRadio);
             this.lblCrudActionBox.Location = new System.Drawing.Point(16, 65);
@@ -211,7 +213,7 @@
             // btnDeleteRadio
             // 
             this.btnDeleteRadio.AutoSize = true;
-            this.btnDeleteRadio.Location = new System.Drawing.Point(7, 43);
+            this.btnDeleteRadio.Location = new System.Drawing.Point(7, 70);
             this.btnDeleteRadio.Name = "btnDeleteRadio";
             this.btnDeleteRadio.Size = new System.Drawing.Size(64, 19);
             this.btnDeleteRadio.TabIndex = 1;
@@ -227,7 +229,6 @@
             this.btnInsertRadio.Name = "btnInsertRadio";
             this.btnInsertRadio.Size = new System.Drawing.Size(58, 19);
             this.btnInsertRadio.TabIndex = 0;
-            this.btnInsertRadio.TabStop = true;
             this.btnInsertRadio.Text = "Insert";
             this.btnInsertRadio.UseVisualStyleBackColor = true;
             this.btnInsertRadio.CheckedChanged += new System.EventHandler(this.btnInsertRadio_CheckedChanged);
@@ -242,6 +243,17 @@
             this.imgLogo.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
             this.imgLogo.TabIndex = 23;
             this.imgLogo.TabStop = false;
+            // 
+            // btnUpdateRadio
+            // 
+            this.btnUpdateRadio.AutoSize = true;
+            this.btnUpdateRadio.Location = new System.Drawing.Point(7, 45);
+            this.btnUpdateRadio.Name = "btnUpdateRadio";
+            this.btnUpdateRadio.Size = new System.Drawing.Size(68, 19);
+            this.btnUpdateRadio.TabIndex = 2;
+            this.btnUpdateRadio.Text = "Update";
+            this.btnUpdateRadio.UseVisualStyleBackColor = true;
+            this.btnUpdateRadio.CheckedChanged += new System.EventHandler(this.btnUpdateRadio_CheckedChanged);
             // 
             // SQLGeneratorForm
             // 
@@ -286,6 +298,7 @@
         private System.Windows.Forms.RadioButton btnDeleteRadio;
         private System.Windows.Forms.RadioButton btnInsertRadio;
         private System.Windows.Forms.PictureBox imgLogo;
+        private System.Windows.Forms.RadioButton btnUpdateRadio;
     }
 }
 

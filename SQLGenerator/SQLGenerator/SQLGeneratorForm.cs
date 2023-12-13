@@ -50,7 +50,8 @@ namespace SQLGenerator
             switch (_operation)
             {
                 case CrudOperation.Insert:
-                    SetToInsertMode();
+                case CrudOperation.Update:
+                    SetToInsertUpdateMode();
                     break;
 
                 case CrudOperation.Delete:
@@ -65,7 +66,7 @@ namespace SQLGenerator
             txtExportFileName.Enabled = !string.IsNullOrEmpty(txtTargetFile.Text);
         }
 
-        private void SetToInsertMode()
+        private void SetToInsertUpdateMode()
         {
             EnableSourceFileFormElements();
             EnableTargetFileFormElements(!chkBoxSameAsSource.Checked);
@@ -104,9 +105,12 @@ namespace SQLGenerator
 
         private void btnGenerate_Click(object sender, EventArgs e)
         {
-            if (_sqlGenerator.SourceFile != null)
+            switch (_operation)
             {
-                _sqlGenerator.ReadCSVFile(txtSourceFile.Text);
+                case CrudOperation.Insert:
+                case CrudOperation.Update:
+                    _sqlGenerator.ReadCSVFile(txtSourceFile.Text);
+                    break;
             }
 
             var tableName = !string.IsNullOrEmpty(txtTableName.Text) ? txtTableName.Text : null;
@@ -159,6 +163,16 @@ namespace SQLGenerator
         {
             btnTargetFile.Enabled = value;
             txtTargetFile.Enabled = value;
+        }
+
+        private void btnUpdateRadio_CheckedChanged(object sender, EventArgs e)
+        {
+            if (btnUpdateRadio.Checked)
+            {
+                _operation = CrudOperation.Update;
+                _sqlGenerator.ClearParameters();
+                RefreshFormState();
+            }
         }
     }
 }

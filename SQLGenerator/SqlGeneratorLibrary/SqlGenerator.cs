@@ -2,7 +2,6 @@
 using System.IO;
 using static SQLGeneratorLibrary.Enums;
 using System.Linq;
-using System.Runtime.InteropServices;
 
 namespace SqlGeneratorLibrary
 {
@@ -60,22 +59,49 @@ namespace SqlGeneratorLibrary
             var table = tableName ?? "MyTable";
 
             using StreamWriter file = new StreamWriter(TargetFile.FullName, true);
+            file.WriteLine("BEGIN TRANSACTION");
             switch (operation)
             {
                 case CrudOperation.Insert:
 
-                    file.WriteLine("BEGIN TRANSACTION");
                     file.WriteLine($"INSERT INTO {table}({string.Join(", ", _headers)}) VALUES");
 
                     foreach (var row in _data)
                     {
                         file.WriteLine($"({string.Join(", ", row.Split(',').ToList())}),");
                     }
+                    break;
 
-                    file.WriteLine("ROLLBACK");
-                    file.WriteLine("-- COMMIT TRANSACTION");
-                    file.WriteLine("-- Uncomment line above when ready to execute command indefinitely.");
+                case CrudOperation.Update:
+                    file.WriteLine($"UPDATE {table}");
 
+                    foreach (var row in _data)
+                    {
+                        var queryBody = "SET ";
+
+                        var headers = _headers.ToList();
+                        var columns = row.Split(',');
+                        var columnSets = new List<string>();
+                        var idColumnIndex = headers.IndexOf("Id");
+
+                        for(int i  = 0; i < _headers.Count(); i++)
+                        {
+                            var columnValue = columns[i];
+                            var isNumeric = int.TryParse(columnValue, out _);
+
+                            if (!isNumeric)
+                            {
+                                columnValue = $"'{columnValue}'";
+                            }
+
+                            columnSets.Add($"{headers[i]}={columnValue}");
+                        }
+
+                        queryBody += string.Join(", ", columnSets) + " ";
+                        queryBody += $"WHERE Id = {columns[idColumnIndex]};";
+
+                        file.WriteLine(queryBody);
+                    }
                     break;
 
                 case CrudOperation.Delete:
@@ -86,6 +112,9 @@ namespace SqlGeneratorLibrary
                     return false;
             }
 
+            file.WriteLine("ROLLBACK");
+            file.WriteLine("-- COMMIT TRANSACTION");
+            file.WriteLine("-- Uncomment line above when ready to execute command indefinitely.");
             file.WriteLine("GO");
             return true;
         }
