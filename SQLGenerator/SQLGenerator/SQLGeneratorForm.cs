@@ -109,7 +109,7 @@ namespace SQLGenerator
             {
                 case CrudOperation.Insert:
                 case CrudOperation.Update:
-                    _sqlGenerator.ReadCSVFile(txtSourceFile.Text);
+                    _sqlGenerator.ReadCsvFile(txtSourceFile.Text);
                     break;
             }
 
