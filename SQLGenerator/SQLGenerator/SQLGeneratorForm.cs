@@ -26,10 +26,7 @@ namespace SQLGenerator
             {
                 _sqlGenerator.SetSourceFile(selectFileDialog.FileName);
                 _sqlGenerator.SetTargetFile(_sqlGenerator.SourceFile.Directory.FullName);
-
-                txtTargetFile.Text = _sqlGenerator.TargetFile.FullName;
-                
-                RefreshFormElements();
+                RefreshFormState();
             }
             else if (dialogResult != DialogResult.Cancel)
             {
@@ -44,100 +41,90 @@ namespace SQLGenerator
             if (selectFolderDialog.ShowDialog() == DialogResult.OK)
             {
                 _sqlGenerator.SetTargetFile(selectFolderDialog.SelectedPath);
-                txtTargetFile.Text = _sqlGenerator.TargetFile.FullName;
-
-                RefreshFormElements();
+                RefreshFormState();
             }
         }
 
-        private void RefreshFormElements()
+        private void RefreshFormState()
         {
-            txtSourceFile.Text = _sqlGenerator.SourceFile.FullName;
-            txtTargetFile.Text = _sqlGenerator.TargetFile.FullName;
-
-            txtExportFileName.Enabled = !string.IsNullOrEmpty(txtTargetFile.Text);
-
             switch (_operation)
             {
                 case CrudOperation.Insert:
-                    SetFormToInsertState();
+                    SetToInsertMode();
                     break;
 
                 case CrudOperation.Delete:
-                    SetFormToDeleteState();
-                    break;
-
-                default:
+                    SetToDeleteMode();
                     break;
             }
+
+            // Refresh text fields with paths
+            txtSourceFile.Text = _sqlGenerator.SourcePath;
+            txtTargetFile.Text = _sqlGenerator.TargetPath;
+            txtExportFileName.Text = _sqlGenerator.CustomExportFileName ?? string.Empty;
+            txtExportFileName.Enabled = !string.IsNullOrEmpty(txtTargetFile.Text);
         }
 
-        private void SetFormToInsertState()
+        private void SetToInsertMode()
         {
-            EnableSourceFileFormElements(true);
-            SetExportSameAsSourceState();
+            EnableSourceFileFormElements();
+            EnableTargetFileFormElements(!chkBoxSameAsSource.Checked);
+            chkBoxSameAsSource.Enabled = _sqlGenerator.SourceFile != null;
 
-            btnGenerate.Enabled = !string.IsNullOrEmpty(txtSourceFile.Text) && !string.IsNullOrEmpty(txtTargetFile.Text);
-        }
-
-        private void SetExportSameAsSourceState()
-        {
-            if (chkBoxSameAsSource.Checked && !string.IsNullOrEmpty(txtSourceFile.Text))
+            if (_sqlGenerator.SourceFile == null || _sqlGenerator.TargetFile == null)
             {
-                chkBoxSameAsSource.Enabled = true;
-            }
-            else
-            {
-                var targetFileIsNotEmpty = !string.IsNullOrEmpty(txtTargetFile.Text);
-
-                EnableTargetFileFormElements(targetFileIsNotEmpty);
-                chkBoxSameAsSource.Enabled = targetFileIsNotEmpty;
+                _sqlGenerator.SetCustomExportFileName(string.Empty);
             }
         }
 
-        private void SetFormToDeleteState()
+        private void SetToDeleteMode()
         {
             EnableSourceFileFormElements(false);
-            EnableTargetFileFormElements(true);
+            EnableTargetFileFormElements();
 
             chkBoxSameAsSource.Enabled = false;
-            txtSourceFile.Text = null;
-            btnGenerate.Enabled = !string.IsNullOrEmpty(txtTargetFile.Text);
+
+            btnGenerate.Enabled = _sqlGenerator.TargetFile != null;
+            txtExportFileName.Enabled = _sqlGenerator.TargetFile != null;
         }
 
         private void chkBoxSameAsSource_CheckedChanged(object sender, EventArgs e)
         {
-            if (!string.IsNullOrEmpty(txtSourceFile.Text))
+            if (_sqlGenerator.SourceFile != null)
             {
-                txtTargetFile.Enabled = !txtTargetFile.Enabled;
-                btnTargetFile.Enabled = !btnTargetFile.Enabled;
-
+                EnableTargetFileFormElements(!txtTargetFile.Enabled);
                 _sqlGenerator.SetTargetFile(_sqlGenerator.SourceFile.Directory.FullName);
-                txtTargetFile.Text = _sqlGenerator.TargetFile.FullName;
+                RefreshFormState();
             }
         }
 
         private void btnGenerate_Click(object sender, EventArgs e)
         {
-            _sqlGenerator.ReadCSVFile(txtSourceFile.Text);
-
-            if (_sqlGenerator.WriteSqlFile(_operation, txtTableName.Text))
+            if (_sqlGenerator.SourceFile != null)
             {
-                _fanfare.Play();
-                MessageBox.Show($"Export Successful!{Environment.NewLine}Location:{Environment.NewLine}{_sqlGenerator.TargetFile.FullName}", "Export Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                _sqlGenerator.ReadCSVFile(txtSourceFile.Text);
             }
-            else
+
+            var tableName = !string.IsNullOrEmpty(txtTableName.Text) ? txtTableName.Text : null;
+            var fileWasWritten = _sqlGenerator.WriteSqlFile(_operation, tableName);
+
+            if (!fileWasWritten)
             {
                 MessageBox.Show("There was an error exporting file", "Export Failed", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return;
             }
+            
+            _fanfare.Play();
+            MessageBox.Show($"Export Successful!{Environment.NewLine}Location:{Environment.NewLine}{_sqlGenerator.TargetFile.FullName}", "Export Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
         }
 
-        private void btnImportRadio_CheckedChanged(object sender, EventArgs e)
+        private void btnInsertRadio_CheckedChanged(object sender, EventArgs e)
         {
-            if (btnImportRadio.Checked)
+            if (btnInsertRadio.Checked)
             {
-                _operation = CrudOperation.Delete;
-                RefreshFormElements();
+                _operation = CrudOperation.Insert;
+                _sqlGenerator.ClearParameters();
+                RefreshFormState();
             }
         }
 
@@ -146,23 +133,25 @@ namespace SQLGenerator
             if (btnDeleteRadio.Checked)
             {
                 _operation = CrudOperation.Delete;
-                RefreshFormElements();
+                _sqlGenerator.ClearParameters();
+                RefreshFormState();
             }
         }
 
         private void txtExportFileName_TextChanged(object sender, EventArgs e)
         {
             _sqlGenerator.SetCustomExportFileName(txtExportFileName.Text);
-            RefreshFormElements();
+            txtExportFileName.Text = _sqlGenerator.CustomExportFileName ?? string.Empty;
+            txtTargetFile.Text = _sqlGenerator.TargetPath;
         }
 
-        private void EnableSourceFileFormElements(bool value)
+        private void EnableSourceFileFormElements(bool value = true)
         {
             btnSourceFile.Enabled = value;
             txtSourceFile.Enabled = value;
         }
 
-        private void EnableTargetFileFormElements(bool value)
+        private void EnableTargetFileFormElements(bool value = true)
         {
             btnTargetFile.Enabled = value;
             txtTargetFile.Enabled = value;
