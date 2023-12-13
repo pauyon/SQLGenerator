@@ -43,12 +43,22 @@ namespace SqlGeneratorLibrary
             }
         }
 
+        /// <summary>
+        /// Sets the source file.
+        /// </summary>
+        /// <param name="filePath">Full path of source file.</param>
         public void SetSourceFile(string filePath)
         {
             SourceFile = new FileInfo(filePath);
             OriginalExportFileName = GetCleanSqlFileName(SourceFile.Name);
         }
 
+        /// <summary>
+        /// Generates file contents and writes to file.
+        /// </summary>
+        /// <param name="operation">Operation to denote the type of sql script to write.</param>
+        /// <param name="table">Name of db table to insert data to.</param>
+        /// <returns>A bool indicating the writing was successful (true) or not (false).</returns>
         public bool WriteSqlFile(CrudOperation operation, string? tableName = null)
         {
             var table = tableName ?? "MyTable";
@@ -59,11 +69,11 @@ namespace SqlGeneratorLibrary
                     break;
 
                 case CrudOperation.Update:
-                    WriteFile(GenerateUpdateLines(table));
+                    WriteFile(GetUpdateScriptContents(table));
                     break;
 
                 case CrudOperation.Delete:
-                    WriteFile(GenerateDeleteLines(table));
+                    WriteFile(GetDeleteScriptContents(table));
                     break;
 
                 default:
@@ -72,7 +82,12 @@ namespace SqlGeneratorLibrary
             return true;
         }
 
-        private IEnumerable<string> GenerateDeleteLines(string table)
+        /// <summary>
+        /// Gets a list of lines representing the contents of a delete file.
+        /// </summary>
+        /// <param name="table">Name of db table to insert data to.</param>
+        /// <returns>All line contents of the delete script to write.</returns>
+        private IEnumerable<string> GetDeleteScriptContents(string table)
         {
             // todo: flesh out this method
             // just figure out what the csv should provide for generating this query
@@ -81,7 +96,12 @@ namespace SqlGeneratorLibrary
             return lines;
         }
 
-        private IEnumerable<string> GenerateUpdateLines(string table)
+        /// <summary>
+        /// Gets a list of lines representing the contents of an update file.
+        /// </summary>
+        /// <param name="table">Name of db table to insert data to.</param>
+        /// <returns>All line contents of the update script to write.</returns>
+        private IEnumerable<string> GetUpdateScriptContents(string table)
         {
             var lines = new List<string>();
             var columnIdIndex = _headers.IndexOf("Id");
@@ -106,6 +126,10 @@ namespace SqlGeneratorLibrary
             return lines;
         }
 
+        /// <summary>
+        /// Writes a list of string representing contents of file to a file.
+        /// </summary>
+        /// <param name="linesToWrite">List of rows to write to file.</param>
         private void WriteFile(IEnumerable<string> linesToWrite)
         {
             if (File.Exists(TargetFile.FullName))
@@ -127,6 +151,11 @@ namespace SqlGeneratorLibrary
             file.WriteLine("GO");
         }
 
+        /// <summary>
+        /// Gets a list of lines representing the contents of an insert file.
+        /// </summary>
+        /// <param name="table">Name of db table to insert data to.</param>
+        /// <returns>All line contents of the insert script to write.</returns>
         private IEnumerable<string> GenerateInsertLines(string table)
         {
             var lines = new List<string>();
@@ -143,6 +172,12 @@ namespace SqlGeneratorLibrary
             return lines;
         }
 
+        /// <summary>
+        /// Returns a row of formatted data.
+        /// Non-numeric values are surrounded with single quotes.
+        /// </summary>
+        /// <param name="row">String value of csv file row.</param>
+        /// <returns>List of values where non-numeric values are surrounded with single quotes.</returns>
         private IEnumerable<string> GetColumnsFormatted(string row)
         {
             var formattedColumns = new List<string>();
@@ -165,20 +200,32 @@ namespace SqlGeneratorLibrary
             return formattedColumns;
         }
 
+        /// <summary>
+        /// Sets the target file. Will use the same name as source file for export file name.
+        /// Otherwise, it will use the custom filename if available.
+        /// </summary>
+        /// <param name="filePath">Path of target file.</param>
         public void SetTargetFile(string filePath)
         {
             TargetFile = GenerateFileInfo(filePath, ExportFileName);
         }
 
-        public void ReadCSVFile(string text)
+        /// <summary>
+        /// Read and store csv header and rows.
+        /// </summary>
+        /// <param name="filePath">Path to file.</param>
+        public void ReadCSVFile(string filePath)
         {
             // Read all CSV lines & store headers
-            var lines = File.ReadLines(text);
+            var lines = File.ReadLines(filePath);
 
             _headers = lines.First().Split(',').ToList();
             _data = lines.Skip(1);
         }
 
+        /// <summary>
+        /// Resets all file properties.
+        /// </summary>
         public void ClearParameters()
         {
             TargetFile = null;
@@ -187,13 +234,17 @@ namespace SqlGeneratorLibrary
             OriginalExportFileName = string.Empty;
         }
 
-        public void SetCustomExportFileName(string text)
+        /// <summary>
+        /// Sets the custom filename for export. Will default to original file if filename is empty.
+        /// </summary>
+        /// <param name="customFilename">Custom filename to use for export.</param>
+        public void SetCustomExportFileName(string customFilename)
         {
-            CustomExportFileName = !string.IsNullOrEmpty(text) ? text : null;
+            CustomExportFileName = !string.IsNullOrEmpty(customFilename) ? customFilename : null;
 
             if (TargetFile != null && !string.IsNullOrEmpty(CustomExportFileName))
             {
-                TargetFile = GenerateFileInfo(TargetFile.Directory.FullName, GetCleanSqlFileName(text));
+                TargetFile = GenerateFileInfo(TargetFile.Directory.FullName, GetCleanSqlFileName(customFilename));
             }
             else if (TargetFile != null)
             {
@@ -201,6 +252,13 @@ namespace SqlGeneratorLibrary
             }
         }
 
+        /// <summary>
+        /// Gets a new instance of FileInfo.
+        /// Will use Source file name if no custom filename is used.
+        /// </summary>
+        /// <param name="basePath">Base path of file</param>
+        /// <param name="customFileName">Custom filename</param>
+        /// <returns></returns>
         private FileInfo GenerateFileInfo(string basePath, string? customFileName = null)
         {
             if (customFileName != null && customFileName.Trim().Length > 0)
@@ -211,11 +269,16 @@ namespace SqlGeneratorLibrary
             return new FileInfo(Path.Combine(basePath, GetCleanSqlFileName(ExportFileName)));
         }
 
-        private string GetCleanSqlFileName(string text)
+        /// <summary>
+        /// Format string with the extension ".sql"
+        /// </summary>
+        /// <param name="filename">The name of the file.</param>
+        /// <returns>Filename with ".sql" extension.</returns>
+        private string GetCleanSqlFileName(string filename)
         {
-            text = text == string.Empty ? "Export" : text;
+            filename = filename == string.Empty ? "Export" : filename;
 
-            return text.Trim().Replace(".csv", "").Replace(".sql", "") + ".sql";
+            return filename.Trim().Replace(".csv", "").Replace(".sql", "") + ".sql";
         }
     }
 }
