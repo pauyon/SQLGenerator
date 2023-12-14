@@ -52,6 +52,8 @@ namespace SqlGeneratorLibrary
         {
             SourceFile = new FileInfo(filePath);
             OriginalExportFileName = FormatToSqlFilename(SourceFile.Name);
+
+            ReadCsvFile(SourceFile.FullName);
         }
 
         /// <summary>
@@ -247,6 +249,10 @@ namespace SqlGeneratorLibrary
             SourceFile = null;
             CustomExportFileName = null;
             OriginalExportFileName = string.Empty;
+
+            _indexOfIdColumn = -1;
+            _headers = new List<string>();
+            _data = new List<List<string>>();
         }
 
         /// <summary>

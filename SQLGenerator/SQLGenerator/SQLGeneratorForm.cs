@@ -26,6 +26,7 @@ namespace SQLGenerator
             {
                 _sqlGenerator.SetSourceFile(selectFileDialog.FileName);
                 _sqlGenerator.SetTargetFile(_sqlGenerator.SourceFile.Directory.FullName);
+
                 RefreshFormState();
             }
             else if (dialogResult != DialogResult.Cancel)
@@ -105,14 +106,6 @@ namespace SQLGenerator
 
         private void btnGenerate_Click(object sender, EventArgs e)
         {
-            switch (_operation)
-            {
-                case CrudOperation.Insert:
-                case CrudOperation.Update:
-                    _sqlGenerator.ReadCsvFile(txtSourceFile.Text);
-                    break;
-            }
-
             var tableName = !string.IsNullOrEmpty(txtTableName.Text) ? txtTableName.Text : null;
             var fileWasWritten = _sqlGenerator.WriteSqlFile(_operation, tableName);
 
