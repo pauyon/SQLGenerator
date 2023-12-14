@@ -8,8 +8,9 @@ namespace SqlGeneratorLibrary
     public class SqlGenerator
     {
         // Store CSV file info
+        private int _indexOfIdColumn = -1;
         private List<string> _headers;
-        private IEnumerable<string> _data;
+        private List<List<string>> _data;
 
         // Keep track of export filename 
         public string? CustomExportFileName { get; private set; } = null;
@@ -65,15 +66,15 @@ namespace SqlGeneratorLibrary
             switch (operation)
             {
                 case CrudOperation.Insert:
-                    WriteFile(CreateInsertScriptContents(table));
+                    WriteFile(CreateInsertScriptContent(table));
                     break;
 
                 case CrudOperation.Update:
-                    WriteFile(CreateUpdateScriptContents(table));
+                    WriteFile(CreateUpdateScriptContent(table));
                     break;
 
                 case CrudOperation.Delete:
-                    WriteFile(CreateDeleteScriptContents(table));
+                    WriteFile(CreateDeleteScriptContent(table));
                     break;
 
                 default:
@@ -87,12 +88,14 @@ namespace SqlGeneratorLibrary
         /// </summary>
         /// <param name="table">Name of db table to insert data to.</param>
         /// <returns>All line contents of the delete script to write.</returns>
-        private IEnumerable<string> CreateDeleteScriptContents(string table)
+        private IEnumerable<string> CreateDeleteScriptContent(string table)
         {
             // todo: flesh out this method
             // just figure out what the csv should provide for generating this query
-            var lines = new List<string>();
-            lines.Add($"DELETE FROM {table} where ??? = ???");
+            var lines = new List<string>
+            {
+                $"DELETE FROM {table} where ??? = ???"
+            };
             return lines;
         }
 
@@ -101,25 +104,29 @@ namespace SqlGeneratorLibrary
         /// </summary>
         /// <param name="table">Name of db table to insert data to.</param>
         /// <returns>All line contents of the update script to write.</returns>
-        private IEnumerable<string> CreateUpdateScriptContents(string table)
+        private IEnumerable<string> CreateUpdateScriptContent(string table)
         {
-            var lines = new List<string>();
-            var columnIdIndex = _headers.IndexOf("Id");
-
-            lines.Add($"UPDATE {table}");
-
-            foreach (var row in _data)
+            var lines = new List<string>
             {
-                var columns = GetColumnsValuesFormatted(row).ToList();
+                $"UPDATE {table}"
+            };
+
+            foreach (var rowColumns in _data)
+            {
                 var columnValueList = new List<string>();
 
                 var line = "SET ";
-                for (int i = 0; i < _headers.Count(); i++)
+                for (int index = 0; index < _headers.Count(); index++)
                 {
-                    columnValueList.Add($"{_headers[i]}={columns[i]}");
+                    if (index == _indexOfIdColumn)
+                    {
+                        continue;
+                    }
+
+                    columnValueList.Add($"{_headers[index]}={rowColumns[index]}");
                 }
 
-                line += string.Join(", ", columnValueList) + $" WHERE Id = {columns[columnIdIndex]};";
+                line += string.Join(", ", columnValueList) + $" WHERE {_headers[_indexOfIdColumn]} = {rowColumns[_indexOfIdColumn]};";
                 lines.Add(line);
             }
 
@@ -156,48 +163,55 @@ namespace SqlGeneratorLibrary
         /// </summary>
         /// <param name="table">Name of db table to insert data to.</param>
         /// <returns>All line contents of the insert script to write.</returns>
-        private IEnumerable<string> CreateInsertScriptContents(string table)
+        private IEnumerable<string> CreateInsertScriptContent(string table)
         {
-            var lines = new List<string>();
-
-            lines.Add($"INSERT INTO {table}({string.Join(", ", _headers)})");
-            lines.Add("SET");
-
-            foreach (var row in _data)
+            var lines = new List<string>
             {
-                var columns = GetColumnsValuesFormatted(row);
-                lines.Add($"({string.Join(", ", columns)}),");
+                $"INSERT INTO {table}({string.Join(", ", _headers)})",
+                "SET"
+            };
+
+            foreach (var rowColumns in _data)
+            {
+                lines.Add($"({string.Join(", ", rowColumns)}),");
             }
 
             return lines;
         }
 
+
         /// <summary>
-        /// Returns a row of formatted data.
-        /// Non-numeric values are surrounded with single quotes.
+        /// Read data and store data formatted into list of list.
         /// </summary>
-        /// <param name="row">String value of csv file row.</param>
-        /// <returns>List of values where non-numeric values are surrounded with single quotes.</returns>
-        private IEnumerable<string> GetColumnsValuesFormatted(string row)
+        /// <param name="data">List representation of data.</param>
+        /// <returns>A list of row columns with formatted values.</returns>
+        private List<List<string>> ReadDataAndFormat(IEnumerable<string> data)
         {
-            var formattedColumns = new List<string>();
-            var columns = row.Split(',').ToList();
+            var formattedData = new List<List<string>>();
 
-            for (int i = 0; i < columns.Count; i++)
+            foreach (var row in data)
             {
-                var isNumeric = int.TryParse(columns[i], out _);
+                var formattedRow = new List<string>();
+                var columns = row.Split(',').ToList();
 
-                if (!isNumeric)
+                for (int i = 0; i < columns.Count; i++)
                 {
-                    formattedColumns.Add($"'{columns[i]}'");
+                    var isNumeric = int.TryParse(columns[i], out _);
+
+                    if (!isNumeric)
+                    {
+                        formattedRow.Add($"'{columns[i]}'");
+                    }
+                    else
+                    {
+                        formattedRow.Add(columns[i]);
+                    }
                 }
-                else
-                {
-                    formattedColumns.Add(columns[i]);
-                }
+
+                formattedData.Add(formattedRow);
             }
 
-            return formattedColumns;
+            return formattedData;
         }
 
         /// <summary>
@@ -220,7 +234,8 @@ namespace SqlGeneratorLibrary
             var lines = File.ReadLines(filePath);
 
             _headers = lines.First().Split(',').ToList();
-            _data = lines.Skip(1);
+            _indexOfIdColumn = _headers.Select(x => x.ToLower()).ToList().IndexOf("id");
+            _data = ReadDataAndFormat(lines.Skip(1));
         }
 
         /// <summary>
