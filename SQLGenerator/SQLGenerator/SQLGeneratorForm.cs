@@ -48,30 +48,9 @@ namespace SQLGenerator
 
         private void RefreshFormState()
         {
-            switch (_operation)
-            {
-                case CrudOperation.Insert:
-                case CrudOperation.Update:
-                    SetToInsertUpdateMode();
-                    break;
-
-                case CrudOperation.Delete:
-                    SetToDeleteMode();
-                    break;
-            }
-
-            // Refresh text fields with paths
-            txtSourceFile.Text = _sqlGenerator.SourcePath;
-            txtTargetFile.Text = _sqlGenerator.TargetPath;
-            txtExportFileName.Text = _sqlGenerator.CustomExportFileName ?? string.Empty;
-            txtExportFileName.Enabled = !string.IsNullOrEmpty(txtTargetFile.Text);
-        }
-
-        private void SetToInsertUpdateMode()
-        {
             EnableSourceFileFormElements();
             EnableTargetFileFormElements(!chkBoxSameAsSource.Checked);
-            
+
             chkBoxSameAsSource.Enabled = _sqlGenerator.SourceFile != null;
 
             if (_sqlGenerator.SourceFile == null || _sqlGenerator.TargetFile == null)
@@ -79,19 +58,14 @@ namespace SQLGenerator
                 _sqlGenerator.SetCustomExportFileName(string.Empty);
             }
 
-            btnGenerate.Enabled = _sqlGenerator.SourceFile != null && 
+            btnGenerate.Enabled = _sqlGenerator.SourceFile != null &&
                                   _sqlGenerator.TargetPath != null;
-        }
 
-        private void SetToDeleteMode()
-        {
-            EnableSourceFileFormElements(false);
-            EnableTargetFileFormElements();
-
-            chkBoxSameAsSource.Enabled = false;
-            txtExportFileName.Enabled = _sqlGenerator.TargetFile != null;
-            
-            btnGenerate.Enabled = _sqlGenerator.TargetFile != null;
+            // Refresh text fields with paths
+            txtSourceFile.Text = _sqlGenerator.SourcePath;
+            txtTargetFile.Text = _sqlGenerator.TargetPath;
+            txtExportFileName.Text = _sqlGenerator.CustomExportFileName ?? string.Empty;
+            txtExportFileName.Enabled = !string.IsNullOrEmpty(txtTargetFile.Text);
         }
 
         private void chkBoxSameAsSource_CheckedChanged(object sender, EventArgs e)

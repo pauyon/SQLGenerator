@@ -92,12 +92,15 @@ namespace SqlGeneratorLibrary
         /// <returns>All line contents of the delete script to write.</returns>
         private IEnumerable<string> CreateDeleteScriptContent(string table)
         {
-            // todo: flesh out this method
-            // just figure out what the csv should provide for generating this query
-            var lines = new List<string>
+            var lines = new List<string>();
+
+            foreach (var rowColumns in _data)
             {
-                $"DELETE FROM {table} where ??? = ???"
-            };
+                var headerValueList = GetHeaderValueList(rowColumns);
+                var line = $"DELETE FROM {table} WHERE {string.Join(" AND ", headerValueList)} AND {_headers[_indexOfIdColumn]} = {rowColumns[_indexOfIdColumn]};";
+                lines.Add(line);
+            }
+
             return lines;
         }
 
@@ -115,24 +118,29 @@ namespace SqlGeneratorLibrary
 
             foreach (var rowColumns in _data)
             {
-                var columnValueList = new List<string>();
-
-                var line = "SET ";
-                for (int index = 0; index < _headers.Count(); index++)
-                {
-                    if (index == _indexOfIdColumn)
-                    {
-                        continue;
-                    }
-
-                    columnValueList.Add($"{_headers[index]}={rowColumns[index]}");
-                }
-
-                line += string.Join(", ", columnValueList) + $" WHERE {_headers[_indexOfIdColumn]} = {rowColumns[_indexOfIdColumn]};";
+                var headerValueList = GetHeaderValueList(rowColumns);
+                var line = $"SET {string.Join(", ", headerValueList)} WHERE {_headers[_indexOfIdColumn]} = {rowColumns[_indexOfIdColumn]};";
                 lines.Add(line);
             }
 
             return lines;
+        }
+
+        private List<string> GetHeaderValueList(List<string> rowColumns)
+        {
+            var headerValueList = new List<string>();
+
+            for (int index = 0; index < _headers.Count(); index++)
+            {
+                if (index == _indexOfIdColumn)
+                {
+                    continue;
+                }
+
+                headerValueList.Add($"{_headers[index]}={rowColumns[index]}");
+            }
+
+            return headerValueList;
         }
 
         /// <summary>
