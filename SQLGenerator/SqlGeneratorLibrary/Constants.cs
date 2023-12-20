@@ -1,6 +1,6 @@
 ﻿using System.Windows.Forms;
 
-namespace SqlGeneratorLibrary
+namespace SQLGeneratorLibrary
 {
     public static class Constants
     {

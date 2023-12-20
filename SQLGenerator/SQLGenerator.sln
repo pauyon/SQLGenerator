@@ -5,7 +5,7 @@ VisualStudioVersion = 17.7.34221.43
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SQLGenerator", "SQLGenerator\SQLGenerator.csproj", "{2F0E0E21-B0FB-4043-93E5-E0FD06FFA546}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SqlGeneratorLibrary", "SqlGeneratorLibrary\SqlGeneratorLibrary.csproj", "{EE6CE3FB-4B85-4194-B42D-9B9A2E88637B}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SQLGeneratorLibrary", "SqlGeneratorLibrary\SQLGeneratorLibrary.csproj", "{EE6CE3FB-4B85-4194-B42D-9B9A2E88637B}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

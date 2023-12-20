@@ -3,7 +3,7 @@ using System.IO;
 using static SQLGeneratorLibrary.Enums;
 using System.Linq;
 
-namespace SqlGeneratorLibrary
+namespace SQLGeneratorLibrary
 {
     public class SqlGenerator
     {
